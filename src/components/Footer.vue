@@ -66,7 +66,7 @@
             Info
           </h3>
           <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
-            <strong>Version:</strong> 1.1.3
+            <strong>Version:</strong> 1.1.4
           </p>
           <p class="text-sm text-gray-600 dark:text-gray-400">
             <strong>License:</strong> MIT

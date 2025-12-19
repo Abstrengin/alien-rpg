@@ -54,7 +54,8 @@
             Version:
             <span
               class="font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
-            >1.1.3</span>
+              >1.1.4</span
+            >
           </p>
         </div>
 

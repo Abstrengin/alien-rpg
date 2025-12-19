@@ -1,8 +1,5 @@
 <template>
-  <div
-    id="planet-generator"
-    class="mb-8"
-  >
+  <div id="planet-generator" class="mb-8">
     <div
       class="flex flex-wrap items-center justify-between mb-6 pb-4 border-b border-gray-300 dark:border-gray-700"
     >
@@ -20,7 +17,8 @@
           <label
             class="px-4 py-2 bg-gradient-to-r from-blue-50 dark:from-gray-800 to-transparent border-r border-gray-300 dark:border-gray-700 font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap"
             for="inputGroupSelect01"
-          >Select Planet Type</label>
+            >Select Planet Type</label
+          >
           <select
             id="selectPlanet"
             v-model="selectedPlanetValue"
@@ -82,7 +80,8 @@
             >
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-              >Size:</span>
+                >Size:</span
+              >
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 planetSizeSize
               }}</span>
@@ -92,7 +91,8 @@
             >
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-              >Gravity:</span>
+                >Gravity:</span
+              >
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 planetSizeAtmosphere
               }}</span>
@@ -100,16 +100,14 @@
             <div class="flex justify-between items-start">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-              >Examples:</span>
+                >Examples:</span
+              >
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 planetSizeExample
               }}</span>
             </div>
           </div>
-          <Modal
-            v-model:model-value="showModal1"
-            title="PLANET SIZE NOTES"
-          >
+          <Modal v-model:model-value="showModal1" title="PLANET SIZE NOTES">
             <p>
               The size listed is the diameter of the planet in kilometers, with
               examples of roughly equivalent bodies from our Solar System.
@@ -120,9 +118,7 @@
               tests. After a period of acclimation, this modification
               disappears.
             </p>
-            <p class="mb-0">
-              See p.332 in Core Rulebook for more info.
-            </p>
+            <p class="mb-0">See p.332 in Core Rulebook for more info.</p>
             <template #footer>
               <button
                 class="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded w-full"
@@ -161,25 +157,21 @@
             <div class="flex flex-col gap-2">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-              >Type:</span>
+                >Type:</span
+              >
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 planetAtmosphereType
               }}</span>
             </div>
           </div>
-          <Modal
-            v-model:model-value="showModal2"
-            title="ATMOSPHERE NOTES"
-          >
+          <Modal v-model:model-value="showModal2" title="ATMOSPHERE NOTES">
             <p>
               The size of a planet may affect the atmosphere, with the low-digit
               entries (2–8) generally more common for small worlds and the
               higher ones (9–12) associated with larger worlds. Many planets
               have toxic and unbreathable atmospheres—be prepared!
             </p>
-            <p class="mb-0">
-              See p.332 in Core Rulebook for more info.
-            </p>
+            <p class="mb-0">See p.332 in Core Rulebook for more info.</p>
             <template #footer>
               <button
                 class="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded w-full"
@@ -220,7 +212,8 @@
             >
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-              >Temperature:</span>
+                >Temperature:</span
+              >
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 planetTempTemperature
               }}</span>
@@ -230,7 +223,8 @@
             >
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-              >Average:</span>
+                >Average:</span
+              >
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 planetTempAverageTemp
               }}</span>
@@ -238,24 +232,20 @@
             <div class="flex flex-col gap-2">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-              >Description:</span>
+                >Description:</span
+              >
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 planetTempDesc
               }}</span>
             </div>
           </div>
-          <Modal
-            v-model:model-value="showModal3"
-            title="TEMPERATURE NOTES"
-          >
+          <Modal v-model:model-value="showModal3" title="TEMPERATURE NOTES">
             <p>
               The average surface temperature of a planet is dependent on its
               distance from the star as well as the planet's atmosphere. This
               temperature provides a clue as to its position in the star system
             </p>
-            <p class="mb-0">
-              See p.334 in Core Rulebook for more info.
-            </p>
+            <p class="mb-0">See p.334 in Core Rulebook for more info.</p>
             <template #footer>
               <button
                 class="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded w-full"
@@ -296,7 +286,8 @@
             >
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-              >Type:</span>
+                >Type:</span
+              >
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 planetGeoType
               }}</span>
@@ -304,16 +295,14 @@
             <div class="flex flex-col gap-2">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-              >Description:</span>
+                >Description:</span
+              >
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 planetGeoDesc
               }}</span>
             </div>
           </div>
-          <Modal
-            v-model:model-value="showModal4"
-            title="GEOSPHERE NOTES"
-          >
+          <Modal v-model:model-value="showModal4" title="GEOSPHERE NOTES">
             <p>
               Results on the geosphere table (below) tell you the proportion of
               dry land to ocean that exists on the planet. Note that a Frozen
@@ -322,9 +311,7 @@
               should be pointed out that, when it comes to other planets, not
               all oceans are comprised of water.
             </p>
-            <p class="mb-0">
-              See p.334 in Core Rulebook for more info.
-            </p>
+            <p class="mb-0">See p.334 in Core Rulebook for more info.</p>
             <template #footer>
               <button
                 class="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded w-full"
@@ -338,7 +325,7 @@
       </div>
       <div
         v-if="selectedPlanetValue === 3 || selectedPlanetValue === 4"
-        class="md:w-1/2"
+        class="col-span-1 sm:col-span-2 md:col-span-4"
       >
         <div
           v-if="selectedPlanetValue === 3"
@@ -367,7 +354,8 @@
             <div class="flex flex-col gap-2">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-              >Terrain:</span>
+                >Terrain:</span
+              >
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 planetTerrain
               }}</span>
@@ -383,9 +371,7 @@
               only suitable for Terrestrial Planets; for Ice Planets, use the
               Ice Planet Terrain Table instead.
             </p>
-            <p class="mb-0">
-              See p.335-336 in Core Rulebook for more info.
-            </p>
+            <p class="mb-0">See p.335-336 in Core Rulebook for more info.</p>
             <template #footer>
               <button
                 class="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded w-full"
@@ -423,7 +409,8 @@
             <div class="flex flex-col gap-2">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-              >Terrain:</span>
+                >Terrain:</span
+              >
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 planetIceTerrain
               }}</span>
@@ -439,9 +426,7 @@
               only suitable for Terrestrial Planets; for Ice Planets, use the
               Ice Planet Terrain Table instead.
             </p>
-            <p class="mb-0">
-              See p.335-336 in Core Rulebook for more info.
-            </p>
+            <p class="mb-0">See p.335-336 in Core Rulebook for more info.</p>
             <template #footer>
               <button
                 class="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded w-full"
