@@ -92,6 +92,14 @@
 
     <!-- App Content -->
     <div class="flex-1">
+      <!-- Home Page -->
+      <div
+        v-if="activeApp === 'home'"
+        class="w-full"
+      >
+        <Home @navigate="handleNavigate" />
+      </div>
+
       <!-- Alien RPG Generator App -->
       <div
         v-if="activeApp === 'alien-rpg'"
@@ -140,6 +148,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import Home from "./components/Home.vue";
 import AlienRpgApp from "./apps/star-system-generator/App.vue";
 import SpaceTravelApp from "./apps/space-travel-tool/App.vue";
 import JobGeneratorApp from "./apps/job-generator/App.vue";
@@ -147,21 +156,26 @@ import EncountersApp from "./apps/encounters/App.vue";
 import About from "./components/About.vue";
 import Footer from "./components/Footer.vue";
 
-const activeApp = ref("alien-rpg");
+const activeApp = ref("home");
 const isDarkMode = ref(true);
 const isElectronApp = ref(false);
 const isMobileMenuOpen = ref(false);
 
 const apps = [
-  { id: "alien-rpg", name: "Star System Generator" },
-  { id: "space-travel", name: "Space Travel Tool" },
-  { id: "job-generator", name: "Job Generator" },
+  { id: "home", name: "Home" },
   { id: "encounters", name: "Encounters" },
+  { id: "job-generator", name: "Jobs" },
+  { id: "space-travel", name: "Space Travel" },
+  { id: "alien-rpg", name: "Star Systems" },
   { id: "about", name: "About" },
 ];
 
 const setActiveApp = (appId) => {
   activeApp.value = appId;
+};
+
+const handleNavigate = (appId) => {
+  setActiveApp(appId);
 };
 
 onMounted(() => {

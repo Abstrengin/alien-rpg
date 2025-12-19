@@ -29,7 +29,9 @@
         class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
       >
         <div class="mb-4">
-          <div class="text-4xl mb-3">⚔️</div>
+          <div class="text-4xl mb-3">
+            ⚔️
+          </div>
           <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Encounters
           </h2>
@@ -40,8 +42,8 @@
           scenarios that keep your players on their toes.
         </p>
         <button
-          @click="$emit('navigate', 'encounters')"
           class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors"
+          @click="$emit('navigate', 'encounters')"
         >
           Open Encounters →
         </button>
@@ -52,7 +54,9 @@
         class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
       >
         <div class="mb-4">
-          <div class="text-4xl mb-3">💼</div>
+          <div class="text-4xl mb-3">
+            💼
+          </div>
           <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Jobs
           </h2>
@@ -63,8 +67,8 @@
           and complications.
         </p>
         <button
-          @click="$emit('navigate', 'job-generator')"
           class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors"
+          @click="$emit('navigate', 'job-generator')"
         >
           Open Jobs →
         </button>
@@ -75,7 +79,9 @@
         class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
       >
         <div class="mb-4">
-          <div class="text-4xl mb-3">🚀</div>
+          <div class="text-4xl mb-3">
+            🚀
+          </div>
           <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Space Travel
           </h2>
@@ -86,8 +92,8 @@
           across the galaxy.
         </p>
         <button
-          @click="$emit('navigate', 'space-travel')"
           class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors"
+          @click="$emit('navigate', 'space-travel')"
         >
           Open Space Travel →
         </button>
@@ -98,7 +104,9 @@
         class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
       >
         <div class="mb-4">
-          <div class="text-4xl mb-3">🌌</div>
+          <div class="text-4xl mb-3">
+            🌌
+          </div>
           <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Star Systems
           </h2>
@@ -109,8 +117,8 @@
           explorations.
         </p>
         <button
-          @click="$emit('navigate', 'alien-rpg')"
           class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors"
+          @click="$emit('navigate', 'alien-rpg')"
         >
           Open Star Systems →
         </button>
@@ -126,7 +134,9 @@
       </h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="flex items-start gap-4">
-          <div class="text-2xl mt-1">✨</div>
+          <div class="text-2xl mt-1">
+            ✨
+          </div>
           <div>
             <h3 class="font-semibold text-gray-900 dark:text-white mb-1">
               Fast Generation
@@ -137,7 +147,9 @@
           </div>
         </div>
         <div class="flex items-start gap-4">
-          <div class="text-2xl mt-1">🎲</div>
+          <div class="text-2xl mt-1">
+            🎲
+          </div>
           <div>
             <h3 class="font-semibold text-gray-900 dark:text-white mb-1">
               Rules-Based
@@ -148,7 +160,9 @@
           </div>
         </div>
         <div class="flex items-start gap-4">
-          <div class="text-2xl mt-1">🌓</div>
+          <div class="text-2xl mt-1">
+            🌓
+          </div>
           <div>
             <h3 class="font-semibold text-gray-900 dark:text-white mb-1">
               Dark Mode Support
@@ -159,7 +173,9 @@
           </div>
         </div>
         <div class="flex items-start gap-4">
-          <div class="text-2xl mt-1">💾</div>
+          <div class="text-2xl mt-1">
+            💾
+          </div>
           <div>
             <h3 class="font-semibold text-gray-900 dark:text-white mb-1">
               Local Storage
@@ -170,7 +186,9 @@
           </div>
         </div>
         <div class="flex items-start gap-4">
-          <div class="text-2xl mt-1">📱</div>
+          <div class="text-2xl mt-1">
+            📱
+          </div>
           <div>
             <h3 class="font-semibold text-gray-900 dark:text-white mb-1">
               Responsive Design
@@ -181,7 +199,9 @@
           </div>
         </div>
         <div class="flex items-start gap-4">
-          <div class="text-2xl mt-1">⚙️</div>
+          <div class="text-2xl mt-1">
+            ⚙️
+          </div>
           <div>
             <h3 class="font-semibold text-gray-900 dark:text-white mb-1">
               Desktop App
@@ -232,7 +252,7 @@
             :src="terminalSimulatorImage"
             alt="Alien RPG Terminal Simulator Interface"
             class="rounded-lg shadow-md w-full h-auto"
-          />
+          >
         </div>
       </div>
     </div>
