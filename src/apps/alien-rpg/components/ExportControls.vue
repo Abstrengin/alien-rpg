@@ -47,10 +47,10 @@
 
       <!-- Dark mode toggle -->
       <button
-        class="px-4 py-2.5 text-sm bg-gray-600 hover:bg-gray-700 dark:bg-gray-400 dark:hover:bg-gray-300 text-white dark:text-gray-900 rounded transition-colors"
+        class="px-4 py-2.5 text-sm bg-gray-400 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded transition-colors"
         @click="toggleDarkMode"
       >
-        {{ isDarkMode ? "☀️" : "🌙" }}
+        {{ isDarkMode ? "🌙" : "☀️" }}
       </button>
     </div>
   </div>

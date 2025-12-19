@@ -20,8 +20,8 @@ export default defineConfig({
     lib: {
       entry: "src/main.js",
       formats: ["iife"],
-      name: "TTBGTools",
-      fileName: () => "ttbg-tools.js",
+      name: "AlienRPGTools",
+      fileName: () => "alien-rpg-tools.js",
     },
   },
   define: {

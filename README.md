@@ -5,13 +5,17 @@ A comprehensive desktop application suite featuring tools for the Alien RPG tabl
 ## Available Tools
 
 ### 1. **Star System Generator**
+
 Generate complete star systems, planets, and colonies for your Alien RPG campaigns.
+
 - Star System Generator: Create systems with gas giants, terrestrial planets, ice planets, and asteroid belts
 - Planet Generator: Design detailed planets with atmosphere, temperature, geosphere, and terrain
 - Colony Generator: Establish colonies with size, missions, factions, and allegiances
 
 ### 2. **Space Travel Calculator**
+
 Calculate travel times, paycheck schedules, and ship maintenance needs for space voyages.
+
 - Travel Time Calculator: Determine journey duration based on FTL rating and distance
 - Paycheck Calculator: Calculate crew paychecks based on travel duration
 - Ship Maintenance Tracker: Track when maintenance checks are needed during long voyages
@@ -259,6 +263,7 @@ This project uses GitHub Actions to automatically build and release the portable
    - Upload the portable exe to the release
 
 **For users:**
+
 - Download the latest exe from [Releases](https://github.com/Abstrengin/alien-rpg/releases)
 - The app checks for updates automatically on launch (electron-updater)
 
@@ -316,6 +321,7 @@ This project uses GitHub Actions to automatically build and release the portable
    - Upload the portable exe to the release
 
 **For users:**
+
 - Download the latest exe from [Releases](https://github.com/Abstrengin/alien-rpg-star-system-generator/releases)
 - The app checks for updates automatically on launch (electron-updater)
 

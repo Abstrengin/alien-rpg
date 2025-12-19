@@ -1,5 +1,5 @@
 {
-  "name": "ttbg-tools-ecosystem",
+  "name": "alien-rpg-tools",
   "private": true,
   "version": "1.0.0",
   "description": "A comprehensive desktop application suite for Ties That Bind Gaming, including tools for Alien RPG star system generation and space travel planning.",
@@ -25,7 +25,7 @@
   },
   "build": {
     "appId": "com.tiesthatbindgaming.ttbgtools",
-    "productName": "TTBG Tools",
+    "productName": "Alien RPG Tools",
     "directories": {
       "buildResources": "public"
     },
@@ -40,7 +40,7 @@
       "target": [
         "portable"
       ],
-      "icon": "public/TTBG-Icon-2025.ico",
+      "icon": "public/alien-rpg-tools.ico",
       "artifactName": "${productName} Portable ${version}.${ext}",
       "compression": "store"
     },
