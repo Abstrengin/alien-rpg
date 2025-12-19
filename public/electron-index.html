@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Alien RPG Star System Generator</title>
     <style>
+      * {
+        box-sizing: border-box;
+      }
+
       html, body {
         margin: 0;
         padding: 0;
@@ -17,13 +21,14 @@
         background-color: #030712;
       }
       
-      #ttbg-app {
-        min-height: 100vh;
+      #app {
+        display: flex;
+        flex-direction: column;
       }
     </style>
   </head>
   <body>
-    <div id="ttbg-app"></div>
+    <div id="app"></div>
     <!-- Load CSS from dist -->
     <link rel="stylesheet" href="../dist/alien-rpg-tools.css" />
     <!-- Load IIFE bundle from dist -->

@@ -3,7 +3,13 @@ import pluginVue from "eslint-plugin-vue";
 
 export default [
   {
-    ignores: ["dist", "node_modules", "build", ".git", "src/apps/space-travel-tool/dist"],
+    ignores: [
+      "dist",
+      "node_modules",
+      "build",
+      ".git",
+      "src/apps/space-travel-tool/dist",
+    ],
   },
   js.configs.recommended,
   ...pluginVue.configs["flat/recommended"],

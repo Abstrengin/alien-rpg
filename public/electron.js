@@ -269,10 +269,10 @@ const template = [
           dialog
             .showMessageBox(mainWindow, {
               type: "info",
-              title: "About Alien RPG Star System Generator",
-              message: "Alien RPG Star System Generator",
-              detail: `Version: 1.0.0\n\nCopyright © 2025 Ties That Bind Gaming™\nAll rights reserved.\n\nVisit us at: www.tiesthatbindgaming.com`,
-              buttons: ["Visit Website", "Close"],
+              title: "About Alien RPG Tools",
+              message: "Alien RPG Tools",
+              detail: `Version: 1.0.0\n\nCopyright © 2025 Ties That Bind Gaming™\nAll rights reserved.\n\nVisit us at: tiesthatbindgaming.com`,
+              buttons: ["Visit Ties That Bind Gaming", "Close"],
             })
             .then((result) => {
               if (result.response === 0) {

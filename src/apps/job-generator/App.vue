@@ -19,9 +19,8 @@
               title="ABOUT THIS TOOL"
             >
               <p class="mb-3">
-                <strong>Space Travel Calculator</strong> helps you quickly
-                calculate travel times, crew paychecks, and maintenance
-                schedules for your
+                <strong>Alien RPG Job Generator</strong> helps you quickly
+                create engaging jobs for your
                 <a
                   href="https://www.tiesthatbindgaming.com"
                   target="_blank"
@@ -33,15 +32,16 @@
                 campaigns.
               </p>
               <p class="mb-3">
-                Enter your ship's FTL rating and the distance traveled in
-                parsecs to get immediate calculations for travel duration, crew
-                paychecks, fuel costs, and maintenance schedules.
+                Choose from three frameworks: Cargo Runs, Military Missions, or
+                Expeditions. The generator creates complete jobs with employers,
+                objectives, complications, and plot twists based on the Core
+                Rulebook.
               </p>
               <p class="mb-3">
                 <strong>Version:</strong> 1.0.0
               </p>
               <p class="mb-0">
-                Rules source: Alien RPG Core Rulebook, Chapter 8: Ships
+                Rules source: Alien RPG Core Rulebook, Chapter 12: Campaign Play
               </p>
               <template #footer>
                 <button
@@ -55,7 +55,7 @@
 
             <button
               class="w-full mt-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-semibold"
-              @click="resetCalculator"
+              @click="resetGenerator"
             >
               RESET
             </button>
@@ -65,12 +65,9 @@
 
       <!-- Main Content -->
       <main
-        class="flex-1 w-full text-gray-900 dark:text-gray-100 transition-colors duration-200"
+        class="flex-1 text-gray-900 dark:text-gray-100 transition-colors duration-200"
       >
-        <AlienRpgSpaceTravelForm
-          :key="resetKey"
-          @reset="handleReset"
-        />
+        <JobGenerator :key="resetKey" />
       </main>
     </div>
   </div>
@@ -78,7 +75,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import AlienRpgSpaceTravelForm from "./components/Form.vue";
+import JobGenerator from "./components/JobGenerator.vue";
 import Modal from "@/shared/components/Modal.vue";
 import "./style.css";
 
@@ -127,11 +124,7 @@ function applyElectronBackground() {
   document.body.style.backgroundColor = backgroundColor;
 }
 
-const resetCalculator = () => {
+const resetGenerator = () => {
   resetKey.value++;
-};
-
-const handleReset = () => {
-  // Handler for any reset events from the form component
 };
 </script>

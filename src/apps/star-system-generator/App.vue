@@ -1,46 +1,53 @@
 <template>
   <div :class="isElectronApp ? 'min-h-screen' : ''">
     <UpdateNotification />
-    <div
-      class="max-w-7xl mx-auto px-4 py-8 text-gray-900 dark:text-gray-100 transition-colors duration-200"
-    >
-      <div
-        class="bg-white dark:bg-gray-900 rounded-lg shadow-md px-6 pt-4 mb-8 border border-gray-200 dark:border-gray-700"
-      >
-        <Directions @reset-generator="handleReset" />
-      </div>
+    <div class="flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto px-4 py-8">
+      <!-- Sidebar -->
+      <aside class="w-full lg:w-64 lg:flex-shrink-0">
+        <div class="sticky top-24 space-y-4">
+          <!-- Directions Card -->
+          <div
+            class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 border border-gray-200 dark:border-gray-700"
+          >
+            <Directions @reset-generator="handleReset" />
+          </div>
+        </div>
+      </aside>
 
-      <div
-        class="bg-white dark:bg-gray-900 rounded-lg shadow-md px-6 pt-6 mb-8 border border-gray-200 dark:border-gray-700"
+      <!-- Main Content -->
+      <main
+        class="flex-1 text-gray-900 dark:text-gray-100 transition-colors duration-200"
       >
-        <StarSystem
-          :key="resetKey"
-          @selected-star-system-value="handleStarTypeSelection"
-          @data-generated="handleStarSystemData"
-        />
-      </div>
+        <div
+          class="bg-white dark:bg-gray-900 rounded-lg shadow-md px-6 pt-6 mb-8 border border-gray-200 dark:border-gray-700"
+        >
+          <StarSystem
+            :key="resetKey"
+            @selected-star-system-value="handleStarTypeSelection"
+            @data-generated="handleStarSystemData"
+          />
+        </div>
 
-      <div
-        class="bg-white dark:bg-gray-900 rounded-lg shadow-md px-6 pt-6 mb-8 border border-gray-200 dark:border-gray-700"
-      >
-        <PlanetGenerator
-          :key="resetKey"
-          :selected-star-type="selectedStarType"
-          @data-generated="handlePlanetData"
-        />
-      </div>
+        <div
+          class="bg-white dark:bg-gray-900 rounded-lg shadow-md px-6 pt-6 mb-8 border border-gray-200 dark:border-gray-700"
+        >
+          <PlanetGenerator
+            :key="resetKey"
+            :selected-star-type="selectedStarType"
+            @data-generated="handlePlanetData"
+          />
+        </div>
 
-      <div
-        class="bg-white dark:bg-gray-900 rounded-lg shadow-md px-6 pt-6 mb-8 border border-gray-200 dark:border-gray-700"
-      >
-        <ColonyGenerator
-          :key="resetKey"
-          :disabled="disableButton"
-          @data-generated="handleColonyData"
-        />
-      </div>
-
-      <GeneratorFooter />
+        <div
+          class="bg-white dark:bg-gray-900 rounded-lg shadow-md px-6 pt-6 border border-gray-200 dark:border-gray-700"
+        >
+          <ColonyGenerator
+            :key="resetKey"
+            :disabled="disableButton"
+            @data-generated="handleColonyData"
+          />
+        </div>
+      </main>
     </div>
   </div>
 </template>
@@ -51,12 +58,12 @@ import Directions from "./components/Directions.vue";
 import StarSystem from "./components/StarSystem.vue";
 import PlanetGenerator from "./components/PlanetGenerator.vue";
 import ColonyGenerator from "./components/ColonyGenerator.vue";
-import GeneratorFooter from "./components/Footer.vue";
 import UpdateNotification from "./components/UpdateNotification.vue";
 import "./style.css";
 
 // Detect if running in Electron
 const isElectronApp = ref(false);
+
 onMounted(() => {
   // Load saved theme preference
   const savedTheme = localStorage.getItem("theme-preference");
@@ -91,10 +98,10 @@ onMounted(() => {
 
 // Apply background based on dark class or system preference
 function applyElectronBackground() {
-  const isDarkMode =
+  const isDark =
     document.documentElement.classList.contains("dark") ||
     window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const backgroundColor = isDarkMode ? "#030712" : "#ffffff";
+  const backgroundColor = isDark ? "#030712" : "#ffffff";
   document.documentElement.style.backgroundColor = backgroundColor;
   document.body.style.backgroundColor = backgroundColor;
 }

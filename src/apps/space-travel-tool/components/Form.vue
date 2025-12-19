@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="max-w-7xl mx-auto px-4 py-8 text-gray-900 dark:text-gray-100 transition-colors duration-200"
-  >
+  <div class="text-gray-900 dark:text-gray-100 transition-colors duration-200">
     <!-- Header Section -->
     <div
       class="bg-white dark:bg-gray-900 rounded-lg shadow-md px-6 pt-6 mb-8 border border-gray-200 dark:border-gray-700"
@@ -30,16 +28,38 @@
             >
               What is the ship's <strong>FTL Rating</strong>?
             </label>
-            <input
-              id="ae-ftl-rating"
-              v-model.number="ftlRating"
-              type="number"
-              name="ae-ftl-rating"
-              class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 font-medium"
-              min="0"
-              placeholder="0"
-              @input="calculateTotals"
-            >
+            <div class="flex gap-2">
+              <button
+                type="button"
+                class="px-4 py-3 bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-bold rounded-lg transition-colors"
+                @click="
+                  ftlRating = Math.max(0, ftlRating - 1);
+                  calculateTotals();
+                "
+              >
+                −
+              </button>
+              <input
+                id="ae-ftl-rating"
+                v-model.number="ftlRating"
+                type="number"
+                name="ae-ftl-rating"
+                class="block flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 font-medium text-center"
+                min="0"
+                placeholder="0"
+                @input="calculateTotals"
+              >
+              <button
+                type="button"
+                class="px-4 py-3 bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-bold rounded-lg transition-colors"
+                @click="
+                  ftlRating++;
+                  calculateTotals();
+                "
+              >
+                +
+              </button>
+            </div>
           </div>
           <div>
             <label
@@ -48,30 +68,44 @@
             >
               How many <strong>Parsecs</strong> has the ship traveled?
             </label>
-            <input
-              id="ae-parsecs"
-              v-model.number="parsecs"
-              type="number"
-              name="ae-parsecs"
-              class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 font-medium"
-              min="0"
-              placeholder="0"
-              @input="calculateTotals"
-            >
+            <div class="flex gap-2">
+              <button
+                type="button"
+                class="px-4 py-3 bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-bold rounded-lg transition-colors"
+                @click="
+                  parsecs = Math.max(0, parsecs - 1);
+                  calculateTotals();
+                "
+              >
+                −
+              </button>
+              <input
+                id="ae-parsecs"
+                v-model.number="parsecs"
+                type="number"
+                name="ae-parsecs"
+                class="block flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 font-medium text-center"
+                min="0"
+                placeholder="0"
+                @input="calculateTotals"
+              >
+              <button
+                type="button"
+                class="px-4 py-3 bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-bold rounded-lg transition-colors"
+                @click="
+                  parsecs++;
+                  calculateTotals();
+                "
+              >
+                +
+              </button>
+            </div>
           </div>
           <p class="text-sm text-gray-500 dark:text-gray-400 italic">
             Note: You can overcharge the engines to travel faster. Core
             Rulebook: Page 167.
           </p>
         </fieldset>
-
-        <button
-          type="button"
-          class="w-full px-5 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg mt-6 mb-4"
-          @click="resetForm"
-        >
-          RESET CALCULATOR
-        </button>
       </form>
     </div>
 
@@ -222,13 +256,5 @@ const calculateShipMaintenance = computed(() => {
 
 const calculateTotals = () => {
   // Computed properties auto-update
-};
-
-const resetForm = () => {
-  ftlRating.value = 0;
-  parsecs.value = 0;
-  if (aeFtlCalculator.value) {
-    aeFtlCalculator.value.reset();
-  }
 };
 </script>
