@@ -28,12 +28,20 @@
           </h3>
           <ul class="list-disc list-inside space-y-1">
             <li>
-              <strong>Star System Generator</strong> - Generate complete star
-              systems, planets, and colonies
+              <strong>Encounters</strong> - Generate tactical encounters and
+              environmental hazards
             </li>
             <li>
-              <strong>Space Travel Calculator</strong> - Calculate travel times,
+              <strong>Job Generator</strong> - Create engaging job opportunities
+              for your campaigns
+            </li>
+            <li>
+              <strong>Space Travel Tool</strong> - Calculate travel times,
               paychecks, and maintenance schedules
+            </li>
+            <li>
+              <strong>Star System Generator</strong> - Generate complete star
+              systems, planets, and colonies
             </li>
           </ul>
         </div>
@@ -46,7 +54,8 @@
             Version:
             <span
               class="font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
-            >1.0.0</span>
+              >1.1.2</span
+            >
           </p>
         </div>
 
@@ -93,7 +102,7 @@
               engines, life support, communications, and navigation
             </li>
             <li>
-              <strong>Facility Management</strong> - Lock doors, trigger alarms,
+              <strong>Colony Management</strong> - Lock doors, trigger alarms,
               and manage security protocols
             </li>
             <li>
@@ -117,7 +126,7 @@
               for command authority
             </li>
             <li>
-              <strong>Real-Time Crew Sync</strong> - All players see updates
+              <strong>Real-Time Operator Sync</strong> - All players see updates
               instantly
             </li>
             <li>
