@@ -1,5 +1,8 @@
 <template>
-  <div id="star-system" class="mb-8">
+  <div
+    id="star-system"
+    class="mb-8"
+  >
     <div
       class="flex flex-wrap items-center justify-between mb-6 pb-4 border-b border-gray-300 dark:border-gray-700"
     >
@@ -23,8 +26,7 @@
           <label
             class="px-4 py-2 bg-gradient-to-r from-blue-50 dark:from-gray-800 to-transparent dark:to-transparent border-r border-gray-300 dark:border-gray-700 font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap"
             for="inputGroupSelect01"
-            >Select Star Type</label
-          >
+          >Select Star Type</label>
           <select
             id="selectStar"
             v-model="selectedValue"
@@ -41,7 +43,11 @@
           </select>
         </div>
       </div>
-      <div v-show="selectedValue" class="w-full" @click="handleChange">
+      <div
+        v-show="selectedValue"
+        class="w-full"
+        @click="handleChange"
+      >
         <button
           class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-5 py-3 rounded-lg uppercase w-full font-semibold transition-all duration-200 shadow-md hover:shadow-lg"
         >
@@ -75,8 +81,7 @@
             <div class="flex justify-between items-start">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-                >Quantity:</span
-              >
+              >Quantity:</span>
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 gasGiantsRoll
               }}</span>
@@ -105,8 +110,7 @@
             <div class="flex justify-between items-start">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-                >Quantity:</span
-              >
+              >Quantity:</span>
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 terrestrialPlanetsRoll
               }}</span>
@@ -135,8 +139,7 @@
             <div class="flex justify-between items-start">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-                >Quantity:</span
-              >
+              >Quantity:</span>
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 icePlanetsRoll
               }}</span>
@@ -165,8 +168,7 @@
             <div class="flex justify-between items-start">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-                >Quantity:</span
-              >
+              >Quantity:</span>
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 asteroidBeltsRoll
               }}</span>
@@ -179,7 +181,10 @@
       v-show="selectedValue && gasGiantsRoll > 0"
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-3"
     >
-      <div v-show="selectedValue && gasGiantsRoll > 0" class="flex-1">
+      <div
+        v-show="selectedValue && gasGiantsRoll > 0"
+        class="flex-1"
+      >
         <div
           class="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 h-full shadow hover:shadow-md transition-shadow duration-200"
         >
@@ -200,8 +205,7 @@
             <div class="flex justify-between items-start">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-                >Quantity:</span
-              >
+              >Quantity:</span>
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 gasGiantMoonsRoll
               }}</span>
@@ -209,7 +213,10 @@
           </div>
         </div>
       </div>
-      <div v-show="selectedValue && gasGiantsRoll > 0" class="flex-1">
+      <div
+        v-show="selectedValue && gasGiantsRoll > 0"
+        class="flex-1"
+      >
         <div
           class="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 h-full shadow hover:shadow-md transition-shadow duration-200"
         >
@@ -230,8 +237,7 @@
             <div class="flex flex-col gap-2">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-                >Features:</span
-              >
+              >Features:</span>
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 gasGiantFeaturesRoll
               }}</span>
@@ -239,7 +245,10 @@
           </div>
         </div>
       </div>
-      <div v-show="selectedValue && asteroidBeltsRoll > 0" class="flex-1">
+      <div
+        v-show="selectedValue && asteroidBeltsRoll > 0"
+        class="flex-1"
+      >
         <div
           class="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 h-full shadow hover:shadow-md transition-shadow duration-200"
         >
@@ -260,8 +269,7 @@
             <div class="flex flex-col gap-2">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-                >Features:</span
-              >
+              >Features:</span>
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 asteroidBeltFeaturesRoll
               }}</span>
@@ -273,10 +281,15 @@
   </div>
 
   <!-- MODALS -->
-  <Modal v-model:model-value="showModalSS1" title="PLANET SIZE NOTES">
+  <Modal
+    v-model:model-value="showModalSS1"
+    title="PLANET SIZE NOTES"
+  >
     <p>You can find more information on Star Systems in the Core Rulebook.</p>
     <p>For Star Types, go to page 330.</p>
-    <p class="mb-0">For Star System Generator and Details, go to page 340.</p>
+    <p class="mb-0">
+      For Star System Generator and Details, go to page 340.
+    </p>
     <template #footer>
       <button
         class="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded w-full"

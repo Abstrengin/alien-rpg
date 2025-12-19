@@ -1,5 +1,8 @@
 <template>
-  <div id="footer" class="mt-4">
+  <div
+    id="footer"
+    class="mt-4"
+  >
     <div class="flex flex-wrap">
       <div class="flex-1">
         <button
@@ -8,7 +11,10 @@
         >
           APP INFO
         </button>
-        <Modal v-model:model-value="showModalFooter1" title="APP INFO">
+        <Modal
+          v-model:model-value="showModalFooter1"
+          title="APP INFO"
+        >
           <p>App Version: 1.0 Beta</p>
           <p class="mb-0">
             Copyright &copy; {{ currentYear }} Ties That Bind Gaming

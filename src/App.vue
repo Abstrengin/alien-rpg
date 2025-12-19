@@ -46,12 +46,18 @@
     <!-- App Content -->
     <div class="min-h-[calc(100vh-80px)]">
       <!-- Alien RPG Generator App -->
-      <div v-if="activeApp === 'alien-rpg'" class="w-full">
+      <div
+        v-if="activeApp === 'alien-rpg'"
+        class="w-full"
+      >
         <AlienRpgApp />
       </div>
 
       <!-- Space Travel Tool App -->
-      <div v-if="activeApp === 'space-travel'" class="w-full">
+      <div
+        v-if="activeApp === 'space-travel'"
+        class="w-full"
+      >
         <SpaceTravelApp />
       </div>
     </div>
@@ -62,7 +68,6 @@
 import { ref, onMounted } from "vue";
 import AlienRpgApp from "./apps/alien-rpg/App.vue";
 import SpaceTravelApp from "./apps/space-travel-tool/App.vue";
-import "./style.css";
 
 const activeApp = ref("alien-rpg");
 const isDarkMode = ref(true);

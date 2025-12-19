@@ -8,7 +8,9 @@
         class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-4"
       >
         <div class="flex-1">
-          <p class="font-semibold mb-1">Update Available</p>
+          <p class="font-semibold mb-1">
+            Update Available
+          </p>
           <p class="text-sm text-blue-100">
             A new version is ready to install.
             <span v-if="updateProgress > 0 && updateProgress < 100">

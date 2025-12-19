@@ -1,4 +1,4 @@
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 
 export function useExport() {
   const isCopying = ref(false);

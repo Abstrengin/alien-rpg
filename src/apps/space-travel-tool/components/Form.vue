@@ -17,7 +17,11 @@
       </div>
 
       <!-- Form Section -->
-      <form id="ae-ftl-calculator" ref="aeFtlCalculator" class="space-y-6 pb-6">
+      <form
+        id="ae-ftl-calculator"
+        ref="aeFtlCalculator"
+        class="space-y-6 pb-6"
+      >
         <fieldset class="space-y-4">
           <div>
             <label
@@ -27,15 +31,15 @@
               What is the ship's <strong>FTL Rating</strong>?
             </label>
             <input
+              id="ae-ftl-rating"
               v-model.number="ftlRating"
-              @input="calculateTotals"
               type="number"
               name="ae-ftl-rating"
-              id="ae-ftl-rating"
               class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 font-medium"
               min="0"
               placeholder="0"
-            />
+              @input="calculateTotals"
+            >
           </div>
           <div>
             <label
@@ -45,15 +49,15 @@
               How many <strong>Parsecs</strong> has the ship traveled?
             </label>
             <input
+              id="ae-parsecs"
               v-model.number="parsecs"
-              @input="calculateTotals"
               type="number"
               name="ae-parsecs"
-              id="ae-parsecs"
               class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 font-medium"
               min="0"
               placeholder="0"
-            />
+              @input="calculateTotals"
+            >
           </div>
           <p class="text-sm text-gray-500 dark:text-gray-400 italic">
             Note: You can overcharge the engines to travel faster. Core
@@ -95,7 +99,10 @@
               total days of travel
             </p>
           </div>
-          <div v-else class="text-gray-500 dark:text-gray-400 italic">
+          <div
+            v-else
+            class="text-gray-500 dark:text-gray-400 italic"
+          >
             Please enter FTL Rating and Parsecs Traveled
           </div>
         </div>
@@ -176,7 +183,10 @@
               Comtech and Heavy Machinery Rolls needed to check for ship damage.
             </p>
           </div>
-          <div v-else class="text-gray-500 dark:text-gray-400 italic">
+          <div
+            v-else
+            class="text-gray-500 dark:text-gray-400 italic"
+          >
             No Ship Maintenance needed
           </div>
         </div>

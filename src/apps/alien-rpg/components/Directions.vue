@@ -1,5 +1,8 @@
 <template>
-  <div id="ae-directions" class="mb-4">
+  <div
+    id="ae-directions"
+    class="mb-4"
+  >
     <div class="flex flex-wrap gap-3">
       <div class="w-full lg:mb-0">
         <button
@@ -8,7 +11,10 @@
         >
           DIRECTIONS
         </button>
-        <Modal v-model:model-value="showModalDir1" title="DIRECTIONS">
+        <Modal
+          v-model:model-value="showModalDir1"
+          title="DIRECTIONS"
+        >
           <p class="mb-3">
             Use the <strong>Alien RPG Star System Generator</strong> to quickly
             generate a star system, planet, or colony. You can get an initial
@@ -38,7 +44,9 @@
             core rulebook. Once you generate a entity, you are done. You do not
             need to make any adjustments.
           </p>
-          <p class="mb-0">See p.330 in Core Rulebook for more info.</p>
+          <p class="mb-0">
+            See p.330 in Core Rulebook for more info.
+          </p>
           <template #footer>
             <button
               class="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded w-full"

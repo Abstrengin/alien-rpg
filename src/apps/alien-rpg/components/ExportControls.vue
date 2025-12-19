@@ -17,7 +17,10 @@
     <!-- Right side controls -->
     <div class="flex flex-wrap gap-2 items-center">
       <!-- Export buttons -->
-      <div v-if="hasData" class="flex flex-wrap gap-2">
+      <div
+        v-if="hasData"
+        class="flex flex-wrap gap-2"
+      >
         <button
           class="px-3 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded"
           :disabled="isCopying"

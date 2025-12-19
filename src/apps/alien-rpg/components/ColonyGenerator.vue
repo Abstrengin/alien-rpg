@@ -1,5 +1,8 @@
 <template>
-  <div id="colony-generator" class="mb-8">
+  <div
+    id="colony-generator"
+    class="mb-8"
+  >
     <div
       class="flex flex-wrap items-center justify-between mb-6 pb-4 border-b border-gray-300 dark:border-gray-700"
     >
@@ -23,9 +26,7 @@
             :disabled="!disableButton"
             @click="colonyRollD6"
           >
-            <span v-if="sharedState.pgPlanetGeneratorTrigger === 0"
-              >GENERATE A PLANET FIRST</span
-            >
+            <span v-if="sharedState.pgPlanetGeneratorTrigger === 0">GENERATE A PLANET FIRST</span>
             <span v-else>Roll D6{{ ": " + rollD6Result }}</span>
           </button>
         </div>
@@ -35,13 +36,9 @@
             :disabled="!disableButton"
             @click="handleColonyGen"
           >
-            <span v-if="sharedState.pgPlanetGeneratorTrigger === 0"
-              >GENERATE A PLANET FIRST</span
-            >
-            <span v-else
-              >GENERATE
-              <span v-if="colonyGeneratorTrigger === 1">NEW</span> COLONY</span
-            >
+            <span v-if="sharedState.pgPlanetGeneratorTrigger === 0">GENERATE A PLANET FIRST</span>
+            <span v-else>GENERATE
+              <span v-if="colonyGeneratorTrigger === 1">NEW</span> COLONY</span>
           </button>
         </div>
       </div>
@@ -77,8 +74,7 @@
             >
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-                >Size:</span
-              >
+              >Size:</span>
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 colonySizeSize
               }}</span>
@@ -88,8 +84,7 @@
             >
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-                >Population:</span
-              >
+              >Population:</span>
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 colonySizePopulation
               }}</span>
@@ -97,8 +92,7 @@
             <div class="flex flex-col gap-2">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-                >Missions:</span
-              >
+              >Missions:</span>
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 colonySizeMissions
               }}</span>
@@ -118,9 +112,7 @@
             </p>
           </div>
           <div class="px-5 py-4 flex items-center justify-between">
-            <span class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-              >Type:</span
-            >
+            <span class="font-semibold text-gray-700 dark:text-gray-300 text-sm">Type:</span>
             <span class="text-gray-900 dark:text-gray-100 font-medium">{{
               colonyMissionType
             }}</span>
@@ -152,8 +144,7 @@
             <div class="flex flex-col gap-2">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-                >In Orbit:</span
-              >
+              >In Orbit:</span>
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 orbitInOrbit
               }}</span>
@@ -186,8 +177,7 @@
             <div class="flex flex-col gap-2">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-                >Count:</span
-              >
+              >Count:</span>
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 numberOfFactionsTotal
               }}</span>
@@ -207,9 +197,7 @@
             </p>
           </div>
           <div class="px-5 py-4 flex items-center justify-between">
-            <span class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-              >Type:</span
-            >
+            <span class="font-semibold text-gray-700 dark:text-gray-300 text-sm">Type:</span>
             <span class="text-gray-900 dark:text-gray-100 font-medium">{{
               colonyFactionsDesc
             }}</span>
@@ -233,8 +221,7 @@
             >
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-                >ICSC:</span
-              >
+              >ICSC:</span>
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 colonyAllegianceIndependant
               }}</span>
@@ -242,8 +229,7 @@
             <div class="flex flex-col gap-2">
               <span
                 class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-                >USA/AJA:</span
-              >
+              >USA/AJA:</span>
               <span class="text-gray-900 dark:text-gray-100 font-medium">{{
                 colonyAllegianceAmerican
               }}</span>
@@ -263,9 +249,7 @@
             </p>
           </div>
           <div class="px-5 py-4 flex flex-col gap-2">
-            <span class="font-semibold text-gray-700 dark:text-gray-300 text-sm"
-              >Hook:</span
-            >
+            <span class="font-semibold text-gray-700 dark:text-gray-300 text-sm">Hook:</span>
             <span class="text-gray-900 dark:text-gray-100 font-medium">{{
               scenarioHooksHooks
             }}</span>
@@ -273,7 +257,10 @@
         </div>
       </div>
     </div>
-    <Modal v-model:model-value="showModalc1" title="GENERATE A COLONY NOTES">
+    <Modal
+      v-model:model-value="showModalc1"
+      title="GENERATE A COLONY NOTES"
+    >
       <p>
         The buttons to generate a colony will become available once you genearte
         a planet. Colonies are dependant on Planet modifiers.
@@ -292,7 +279,10 @@
         </button>
       </template>
     </Modal>
-    <Modal v-model:model-value="showModal6" title="COLONY SIZE NOTES">
+    <Modal
+      v-model:model-value="showModal6"
+      title="COLONY SIZE NOTES"
+    >
       <p>
         Colonial habitation on the Outer Rim and the Frontier is generally
         limited to small settlements with only one or two missions. These
@@ -305,7 +295,9 @@
         decide this is the case or roll 2D6, with 10 indicating two competing
         colonies on the same world.
       </p>
-      <p class="mb-0">See p.336 in Core Rulebook for more info.</p>
+      <p class="mb-0">
+        See p.336 in Core Rulebook for more info.
+      </p>
       <template #footer>
         <button
           class="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded w-full"
@@ -315,13 +307,18 @@
         </button>
       </template>
     </Modal>
-    <Modal v-model:model-value="showModal7" title="ORBIT NOTES">
+    <Modal
+      v-model:model-value="showModal7"
+      title="ORBIT NOTES"
+    >
       <p>
         A colonized world will have objects of interest in orbit. If the planet
         is unexplored and uninhabited then simply roll D3–1 for the number of
         moons.
       </p>
-      <p class="mb-0">See p.337 in Core Rulebook for more info.</p>
+      <p class="mb-0">
+        See p.337 in Core Rulebook for more info.
+      </p>
       <template #footer>
         <button
           class="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded w-full"
@@ -331,7 +328,10 @@
         </button>
       </template>
     </Modal>
-    <Modal v-model:model-value="showModal8" title="FACTION NOTES">
+    <Modal
+      v-model:model-value="showModal8"
+      title="FACTION NOTES"
+    >
       <p>
         No colony and no human society is truly harmonious—there are schisms,
         groups, and factions, pushing and pulling for control. These factions
@@ -351,7 +351,9 @@
         planet. For colonies outside of the UPP, roll randomly for an
         allegiance, choose one, or create your own.
       </p>
-      <p class="mb-0">See p.337-338 in Core Rulebook for more info.</p>
+      <p class="mb-0">
+        See p.337-338 in Core Rulebook for more info.
+      </p>
       <template #footer>
         <button
           class="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded w-full"
