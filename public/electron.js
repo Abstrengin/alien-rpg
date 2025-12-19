@@ -192,6 +192,7 @@ function createWindow() {
   // Show window when ready
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
+    mainWindow.maximize();
     // Close splash screen when main window is ready
     if (splashScreen && !splashScreen.isDestroyed()) {
       splashScreen.close();
