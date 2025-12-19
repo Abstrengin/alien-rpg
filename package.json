@@ -1,0 +1,80 @@
+{
+  "name": "ttbg-tools-ecosystem",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A comprehensive desktop application suite for Ties That Bind Gaming, including tools for Alien RPG star system generation and space travel planning.",
+  "author": {
+    "name": "Ties That Bind Gaming",
+    "email": "support@tiesthatbindgaming.com"
+  },
+  "type": "module",
+  "main": "public/electron.js",
+  "homepage": "./",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Abstrengin/alien-rpg.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --fix",
+    "electron-dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && cross-env ELECTRON_IS_DEV=true electron .\"",
+    "electron-build": "npm run build && electron-builder --publish never",
+    "release": "npm run build && electron-builder --publish always"
+  },
+  "build": {
+    "appId": "com.tiesthatbindgaming.ttbgtools",
+    "productName": "TTBG Tools",
+    "directories": {
+      "buildResources": "public"
+    },
+    "files": [
+      "dist/**/*",
+      "public/electron.js",
+      "public/preload.js",
+      "public/electron-index.html",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "public/TTBG-Icon-2025.ico",
+      "artifactName": "${productName} Portable ${version}.${ext}",
+      "compression": "store"
+    },
+    "mac": {
+      "target": [
+        "zip"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    }
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@tailwindcss/forms": "^0.5.7",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "autoprefixer": "^10.4.18",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^39.2.7",
+    "electron-builder": "^26.0.12",
+    "electron-is-dev": "^3.0.1",
+    "electron-updater": "^6.6.2",
+    "eslint": "^9.39.2",
+    "eslint-plugin-vue": "^10.6.2",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "vite": "^6.0.1",
+    "wait-on": "^9.0.3"
+  }
+}
