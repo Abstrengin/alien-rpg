@@ -32,32 +32,6 @@ jobs:
           name: windows-build
           path: dist/**
 
-  build-macos:
-    runs-on: macos-latest
-    
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20.x
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build and create executables
-        run: npm run electron-build
-        env:
-          CSC_IDENTITY_AUTO_DISCOVERY: false
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: macos-build
-          path: dist/**
-
   build-linux:
     runs-on: ubuntu-latest
     
@@ -90,7 +64,7 @@ jobs:
           path: dist/**
 
   release:
-    needs: [build-windows, build-macos, build-linux]
+    needs: [build-windows, build-linux]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -107,7 +81,6 @@ jobs:
         run: |
           mkdir -p release-files
           find all-artifacts -type f -name "*Portable*.exe" -exec cp {} release-files/ \;
-          find all-artifacts -type f -name "*-arm64-mac.zip" -exec cp {} release-files/ \;
           find all-artifacts -type f -name "*.AppImage" -exec cp {} release-files/ \;
 
       - name: Create Release
