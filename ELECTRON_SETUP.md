@@ -5,7 +5,7 @@ This document explains how to build and run the Alien RPG Star System Generator 
 ## Why Electron?
 
 - ✅ **No build tools required** - Just Node.js
-- ✅ **Cross-platform** - Windows, macOS, and Linux with one codebase
+- ✅ **Cross-platform** - Windows and Linux with one codebase
 - ✅ **Battle-tested** - Used by VS Code, Discord, Slack, etc.
 - ✅ **Easy installation** - One-click installers and portable executables
 - ✅ **Native features** - File system access, notifications, tray integration, etc.
@@ -47,8 +47,6 @@ This will create:
 
 - **Windows Installer (NSIS)**: Easy installation for users
 - **Windows Portable (.exe)**: Single file, no installation
-- **macOS DMG**: Standard macOS installer
-- **macOS ZIP**: For direct installation
 - **Linux AppImage**: Single file for Linux
 - **Linux DEB**: Package for Debian-based systems
 
@@ -62,8 +60,6 @@ After building, find your apps in the `dist` folder:
 dist/
 ├── Alien RPG Generator 1.0.0.exe          (Portable - Windows)
 ├── Alien RPG Generator Setup 1.0.0.exe    (Installer - Windows)
-├── Alien RPG Generator-1.0.0.dmg          (Installer - macOS)
-├── Alien RPG Generator-1.0.0.zip          (ZIP - macOS)
 ├── Alien RPG Generator-1.0.0.AppImage     (Single file - Linux)
 └── alien-rpg-generator_1.0.0_amd64.deb    (Package - Linux)
 ```
@@ -79,11 +75,6 @@ dist/
 - **Installer (.exe)**: For general users - familiar installation process
 - **Portable (.exe)**: For advanced users - no installation needed, USB-friendly
 
-#### macOS
-
-- **DMG file**: Standard macOS distribution method
-- Users drag the app icon to Applications folder
-
 #### Linux
 
 - **AppImage**: Works on most Linux distributions
@@ -95,7 +86,6 @@ dist/
 | -------------- | ---------- | -------------------------------- |
 | Portable EXE   | ~150-160MB | None (just run)                  |
 | Installer      | ~150-160MB | Standard Windows installer       |
-| macOS DMG      | ~160-170MB | Drag & drop                      |
 | Linux AppImage | ~160-170MB | Direct execution                 |
 | Linux DEB      | ~80-90MB   | `apt install` or package manager |
 
@@ -117,8 +107,7 @@ npm run electron-build
 
 1. Download the appropriate file for their OS
 2. **Windows**: Run the `.exe` installer or portable
-3. **macOS**: Open the `.dmg` and drag app to Applications
-4. **Linux**: Run the `.AppImage` or use `sudo apt install` for DEB
+3. **Linux**: Run the `.AppImage` or use `sudo apt install` for DEB
 
 Users can then just double-click the desktop shortcut or find it in their applications menu.
 
@@ -210,7 +199,7 @@ The desktop app has built-in auto-update functionality using **electron-updater*
 
    - Push your changes and create a new tag: `v1.0.1`
    - Go to GitHub → Releases → Create new release
-   - Upload the generated `.exe` files (or `.dmg`, `.AppImage`, etc.)
+   - Upload the generated `.exe` files (or `.AppImage`, `.deb`, etc.)
    - electron-updater will automatically find these releases
 
 3. **That's it!** Users will be notified automatically when they run the app
@@ -263,6 +252,7 @@ The project includes a GitHub Actions workflow (`.github/workflows/release.yml`)
 ### Creating a Release
 
 **Step 1: Commit your changes**
+
 ```bash
 git add .
 git commit -m "Your commit message"
@@ -270,12 +260,14 @@ git push
 ```
 
 **Step 2: Create a version tag**
+
 ```bash
 git tag v1.0.1  # Use semantic versioning (v1.0.0, v1.0.1, v2.0.0, etc.)
 git push origin v1.0.1
 ```
 
 **Step 3: GitHub Actions runs automatically**
+
 - Workflow triggers when tag is pushed
 - Builds the portable exe
 - Creates a release on GitHub with the exe attached
@@ -295,6 +287,7 @@ npm run electron-build
 ```
 
 Then upload `dist/Alien RPG Star System Generator Portable*.exe` to:
+
 1. Go to GitHub repo → Releases → Draft new release
 2. Tag: `v1.0.1` (match your git tag)
 3. Upload the exe file
@@ -305,10 +298,12 @@ Then upload `dist/Alien RPG Star System Generator Portable*.exe` to:
 The app also works as a web component for WordPress/websites:
 
 **Files to deploy**:
+
 - `dist/alien-rpg-planet-generator.js` (bundle)
 - `dist/alien-rpg-planet-generator.css` (styles)
 
 **Usage**:
+
 ```html
 <script src="/path/to/alien-rpg-planet-generator.js"></script>
 <link rel="stylesheet" href="/path/to/alien-rpg-planet-generator.css" />
