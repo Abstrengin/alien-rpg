@@ -74,8 +74,8 @@ git tag v1.3.0
 git push origin v1.3.0
 ```
 
-itch.io setup (API key, the `BUTLER_API_KEY` secret, page configuration) is in
-[ITCH_SETUP.md](ITCH_SETUP.md).
+Step-by-step: [docs/RELEASING.md](docs/RELEASING.md). itch.io setup (API key,
+the `BUTLER_API_KEY` secret, page configuration): [ITCH_SETUP.md](ITCH_SETUP.md).
 
 ## Also from Ties That Bind Gaming
 
