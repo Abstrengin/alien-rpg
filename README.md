@@ -34,8 +34,9 @@ the per-tool `App.vue` wrapper.
 - **GitHub Releases** (portable `.exe` and `.AppImage`):
   <https://github.com/Abstrengin/alien-rpg/releases>
 
-The desktop app checks for updates on launch (electron-updater against GitHub
-Releases).
+The desktop app has no built-in updater. Installs made through the itch.io app
+update automatically on each release; otherwise grab the latest build from the
+itch.io page.
 
 ## Development
 

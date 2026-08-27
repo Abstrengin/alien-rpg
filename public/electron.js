@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, shell, dialog, ipcMain } from "electron";
+import { app, BrowserWindow, Menu, shell, dialog } from "electron";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -10,55 +10,9 @@ const isDevMode = process.env.ELECTRON_IS_DEV === "true";
 
 let mainWindow;
 let splashScreen;
-let autoUpdater = null;
 
-// Try to load electron-updater, but don't crash if it's missing
-(async () => {
-  try {
-    const pkg = await import("electron-updater");
-    autoUpdater = pkg.autoUpdater;
-
-    // Configure auto-updater only in production
-    if (!isDevMode) {
-      autoUpdater.checkForUpdatesAndNotify();
-    }
-  } catch {
-    console.log("electron-updater not available, skipping auto-updates");
-  }
-})();
-
-// Handle update events (only if autoUpdater is available)
-if (autoUpdater) {
-  autoUpdater.on("update-available", () => {
-    if (mainWindow) {
-      mainWindow.webContents.send("update-available");
-    }
-  });
-
-  autoUpdater.on("update-progress", (progressObj) => {
-    if (mainWindow) {
-      mainWindow.webContents.send("update-progress", {
-        bytesPerSecond: progressObj.bytesPerSecond,
-        percent: progressObj.percent,
-        total: progressObj.total,
-        transferred: progressObj.transferred,
-      });
-    }
-  });
-
-  autoUpdater.on("update-downloaded", () => {
-    if (mainWindow) {
-      mainWindow.webContents.send("update-downloaded");
-    }
-  });
-}
-
-// Handle IPC event for restarting to install update
-ipcMain.on("app-update:restart", () => {
-  if (autoUpdater) {
-    autoUpdater.quitAndInstall();
-  }
-});
+// No auto-update: the app is distributed on itch.io. Users update by
+// re-downloading from the page, or automatically if installed via the itch app.
 
 function createSplashScreen() {
   splashScreen = new BrowserWindow({
@@ -151,7 +105,7 @@ function createSplashScreen() {
         <div class="logo-container">
           <div class="icon">🚀</div>
           <div>
-            <div class="app-title">Alien RPG Star System Generator</div>
+            <div class="app-title">Alien RPG Tools</div>
             <div class="app-subtitle">Ties That Bind Gaming™</div>
           </div>
         </div>

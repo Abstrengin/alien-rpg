@@ -169,57 +169,18 @@ npm install
 2. Electron-builder will automatically generate all required icon sizes
 3. Rebuild with `npm run electron-build`
 
-## Auto-Updates
+## Updates
 
-The desktop app has built-in auto-update functionality using **electron-updater**. This allows users to stay up-to-date without manual downloads.
+The desktop app has **no built-in updater**. Distribution is through itch.io:
 
-### How It Works
+- Users who install via the **itch.io desktop app** are updated automatically
+  whenever a new build is pushed to the `windows` / `linux` channels (which
+  happens on every `v*` tag; see [docs/RELEASING.md](docs/RELEASING.md)).
+- Users who download the file directly from the itch.io page update by
+  re-downloading the latest version.
 
-1. **Automatic Check**: When the app starts (in production only), it checks for new versions
-2. **Download Notification**: Users see a blue banner at the top of the window when an update is available
-3. **Progress Indicator**: Download progress is displayed in real-time
-4. **One-Click Install**: Users can click "Install & Restart" to apply the update
-
-### Update Banner Features
-
-- Only appears in the Electron version (not the web version)
-- Shows download progress as a percentage
-- Non-intrusive - doesn't block the app
-- Smooth animations
-
-### Deploying Updates
-
-1. **Build your app**:
-
-   ```bash
-   npm run electron-build
-   ```
-
-2. **Create a GitHub Release**:
-
-   - Push your changes and create a new tag: `v1.0.1`
-   - Go to GitHub → Releases → Create new release
-   - Upload the generated `.exe` files (or `.AppImage`, `.deb`, etc.)
-   - electron-updater will automatically find these releases
-
-3. **That's it!** Users will be notified automatically when they run the app
-
-### Version Management
-
-- Update `version` in `package.json` for each release
-- The app's auto-update system uses this version number
-- Users are only notified of updates if the remote version is higher
-
-### Configuration (Advanced)
-
-electron-updater is configured in `public/electron.js`. Default settings:
-
-- Checks for updates automatically on startup (production only)
-- Updates are optional - users can choose to install
-- Works with GitHub releases out of the box
-
-For GitHub Enterprise or custom servers, see:
-https://www.electron.build/auto-update
+Bump `version` in `package.json` for each release; it flows to the About page,
+footer, tool modals, and the Electron About dialog automatically.
 
 ## Development Tips
 
@@ -275,8 +236,8 @@ git push origin v1.0.1
 
 ### For Users
 
-- **Download**: [GitHub Releases](https://github.com/Abstrengin/alien-rpg-star-system-generator/releases)
-- **Auto-updates**: The app checks for new releases on startup (electron-updater)
+- **Download**: [itch.io](https://abstract-engineer.itch.io/alien-rpg-tools)
+- **Updates**: automatic for itch.io app installs; otherwise re-download from the page
 
 ### Manual Release (If Needed)
 

@@ -33,6 +33,9 @@ All notable changes to this project will be documented in this file.
 - Terminal Simulator references. The product is now
   [Diegetic Simulators](https://diegeticsimulators.com); links and copy in the
   Home, About, and Footer views were updated and the promo image replaced.
+- Auto-update (`electron-updater`) and its wiring in `electron.js` / `preload.js`,
+  plus `useUpdater.js` and `UPDATES_SETUP.md`. Distribution is itch.io only;
+  itch.io app installs update automatically, otherwise users re-download.
 
 ## [1.0.0] - 2025-12-18
 
