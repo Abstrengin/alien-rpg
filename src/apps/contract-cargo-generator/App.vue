@@ -17,7 +17,7 @@
               title="ABOUT THIS TOOL"
             >
               <p class="mb-3">
-                <strong>Star System Generator</strong> generates complete star systems, planets, and colonies with rules-based detail for your Alien RPG campaigns.
+                <strong>Contract & Cargo Generator</strong> generates freighter contracts: the cargo, destination, pay, complications, and the catch nobody mentioned up front.
               </p>
               <p class="mb-3">
                 Part of the Alien RPG Tools suite by

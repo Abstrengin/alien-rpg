@@ -1,0 +1,61 @@
+/**
+ * ttbg-tokens.css
+ * Design-token compatibility shim for tool components ported from the
+ * tiesthatbindgaming.com site (src/styles/global.css). Those components style
+ * themselves with Tailwind arbitrary values that reference these CSS custom
+ * properties and use the `[.light_&]:` variant for light-mode overrides.
+ *
+ * Dark is the default (values on :root). Light mode is opted in by adding the
+ * `light` class to <html> (see src/App.vue theme logic), which also drives the
+ * components' own `.light &` selectors.
+ */
+
+:root {
+  /* Brand */
+  --color-brand-primary: #00c8ff;
+  --color-brand-red: #00c8ff;
+  --color-brand-red-dark: #0090bb;
+  --color-brand-red-light: #5dd8ff;
+
+  /* Accent */
+  --color-accent-magenta: #e040fb;
+  --color-accent-magenta-dark: #c026d3;
+
+  /* Surfaces (dark) */
+  --color-surface-900: #0d1117;
+  --color-surface-800: #161b27;
+  --color-surface-700: #1e2435;
+  --color-surface-600: #252d42;
+  --color-surface-500: #2d3755;
+  --color-surface-400: #374563;
+
+  /* Text */
+  --color-text-primary-dark: #e8edf5;
+  --color-text-secondary-dark: #96a2b8;
+  --color-text-primary-light: #1e2435;
+  --color-text-secondary-light: #4a556a;
+
+  /* Light scale */
+  --color-light-50: #f0f4f8;
+  --color-light-100: #e2e8f0;
+  --color-light-200: #cbd5e1;
+  --color-light-300: #94a3b8;
+}
+
+/**
+ * Light mode. The ported components override text colors themselves via
+ * `[.light_&]:`, so here we remap the surface scale to light values and, as a
+ * safety net for any text that was not given a light override, point the
+ * "dark" text tokens at readable dark ink.
+ */
+html.light {
+  --color-surface-900: #ffffff;
+  --color-surface-800: #f8fafc;
+  --color-surface-700: #f0f4f8;
+  --color-surface-600: #e2e8f0;
+  --color-surface-500: #cbd5e1;
+  --color-surface-400: #94a3b8;
+
+  --color-text-primary-dark: #1e2435;
+  --color-text-secondary-dark: #4a556a;
+}

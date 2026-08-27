@@ -1,10 +1,8 @@
 <template>
   <div :class="isElectronApp ? 'min-h-screen' : ''">
     <div class="flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto px-4 py-8">
-      <!-- Sidebar -->
       <aside class="w-full lg:w-64 lg:flex-shrink-0">
         <div class="sticky top-24 space-y-4">
-          <!-- Info Card -->
           <div
             class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 border border-gray-200 dark:border-gray-700"
           >
@@ -19,29 +17,25 @@
               title="ABOUT THIS TOOL"
             >
               <p class="mb-3">
-                <strong>Space Travel Calculator</strong> helps you quickly
-                calculate travel times, crew paychecks, and maintenance
-                schedules for your
+                <strong>Space Travel Tool</strong> calculates FTL travel time, crew pay periods, and hypersleep event rolls from a ship's FTL rating and the distance in parsecs.
+              </p>
+              <p class="mb-3">
+                Part of the Alien RPG Tools suite by
                 <a
                   href="https://www.tiesthatbindgaming.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="text-blue-600 dark:text-blue-400 hover:underline"
                 >
-                  Alien RPG
-                </a>
-                campaigns.
+                  Ties That Bind Gaming
+                </a>.
               </p>
               <p class="mb-3">
-                Enter your ship's FTL rating and the distance traveled in
-                parsecs to get immediate calculations for travel duration, crew
-                paychecks, fuel costs, and maintenance schedules.
-              </p>
-              <p class="mb-3">
-                <strong>Version:</strong> 1.0.0
+                Compatible with both the original <strong>Alien RPG</strong> and the
+                <strong>Evolved Edition</strong>.
               </p>
               <p class="mb-0">
-                Rules source: Alien RPG Core Rulebook, Chapter 8: Ships
+                <strong>Version:</strong> {{ APP_VERSION }}
               </p>
               <template #footer>
                 <button
@@ -55,7 +49,7 @@
 
             <button
               class="w-full mt-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-semibold"
-              @click="resetCalculator"
+              @click="reset"
             >
               RESET
             </button>
@@ -63,14 +57,10 @@
         </div>
       </aside>
 
-      <!-- Main Content -->
       <main
         class="flex-1 w-full text-gray-900 dark:text-gray-100 transition-colors duration-200"
       >
-        <AlienRpgSpaceTravelForm
-          :key="resetKey"
-          @reset="handleReset"
-        />
+        <Tool :key="resetKey" />
       </main>
     </div>
   </div>
@@ -78,60 +68,23 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import AlienRpgSpaceTravelForm from "./components/Form.vue";
+import Tool from "./tool.vue";
 import Modal from "@/shared/components/Modal.vue";
-import "./style.css";
+import { isElectron } from "@/shared/theme.js";
+import { APP_VERSION } from "@/shared/version.js";
 
 const isElectronApp = ref(false);
 const showAppInfo = ref(false);
 const resetKey = ref(0);
 
 onMounted(() => {
-  // Load saved theme preference
-  const savedTheme = localStorage.getItem("theme-preference");
-  if (savedTheme === "dark") {
-    document.documentElement.classList.add("dark");
-  } else if (savedTheme === "light") {
-    document.documentElement.classList.remove("dark");
-  } else {
-    // Default to dark mode
-    document.documentElement.classList.add("dark");
-    localStorage.setItem("theme-preference", "dark");
-  }
-
-  // Try multiple ways to detect Electron
-  const hasElectronAPI =
-    typeof window !== "undefined" && window.electron?.isElectron === true;
-  const hasElectronProcess =
-    typeof process !== "undefined" && process.versions?.electron;
-
-  isElectronApp.value = hasElectronAPI || hasElectronProcess;
-
-  // Apply system theme-aware background for Electron
+  isElectronApp.value = isElectron();
   if (isElectronApp.value) {
     document.documentElement.setAttribute("data-electron", "true");
-    applyElectronBackground();
-
-    // Listen for system theme changes
-    const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    darkModeQuery.addEventListener("change", applyElectronBackground);
   }
 });
 
-function applyElectronBackground() {
-  const isDark =
-    document.documentElement.classList.contains("dark") ||
-    window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const backgroundColor = isDark ? "#030712" : "#ffffff";
-  document.documentElement.style.backgroundColor = backgroundColor;
-  document.body.style.backgroundColor = backgroundColor;
-}
-
-const resetCalculator = () => {
+const reset = () => {
   resetKey.value++;
-};
-
-const handleReset = () => {
-  // Handler for any reset events from the form component
 };
 </script>

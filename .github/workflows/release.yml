@@ -8,7 +8,7 @@ on:
 jobs:
   build-windows:
     runs-on: windows-latest
-    
+
     steps:
       - uses: actions/checkout@v3
 
@@ -34,7 +34,7 @@ jobs:
 
   build-linux:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v3
 
@@ -57,18 +57,80 @@ jobs:
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
 
-      - name: Upload artifacts
+      - name: Build browser (HTML5) bundle
+        run: npm run build:web
+
+      - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
         with:
           name: linux-build
           path: dist/**
+
+      - name: Upload web (HTML5) build
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: dist-web
+
+  publish-itch:
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-artifacts
+
+      - name: Install butler
+        run: |
+          curl -L -o butler.zip https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default
+          unzip butler.zip
+          chmod +x butler
+          ./butler -V
+
+      - name: Push builds to itch.io
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+          ITCH_TARGET: abstract-engineer/alien-rpg-tools
+        run: |
+          set -e
+          if [ -z "$BUTLER_API_KEY" ]; then
+            echo "::warning::BUTLER_API_KEY secret not set. Skipping itch.io publish."
+            exit 0
+          fi
+
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "Publishing version $VERSION to $ITCH_TARGET"
+
+          WIN_EXE="$(find all-artifacts -type f -name '*Portable*.exe' | head -n 1)"
+          LINUX_APPIMAGE="$(find all-artifacts -type f -name '*.AppImage' | head -n 1)"
+          WEB_DIR="all-artifacts/web-build"
+
+          if [ -n "$WIN_EXE" ]; then
+            ./butler push "$WIN_EXE" "$ITCH_TARGET:windows" --userversion "$VERSION"
+          else
+            echo "::warning::No Windows portable .exe found; skipping windows channel."
+          fi
+
+          if [ -n "$LINUX_APPIMAGE" ]; then
+            ./butler push "$LINUX_APPIMAGE" "$ITCH_TARGET:linux" --userversion "$VERSION"
+          else
+            echo "::warning::No Linux AppImage found; skipping linux channel."
+          fi
+
+          if [ -f "$WEB_DIR/index.html" ]; then
+            ./butler push "$WEB_DIR" "$ITCH_TARGET:html5" --userversion "$VERSION"
+          else
+            echo "::warning::No web build (index.html) found; skipping html5 channel."
+          fi
 
   release:
     needs: [build-windows, build-linux]
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    
+
     steps:
       - uses: actions/checkout@v3
 

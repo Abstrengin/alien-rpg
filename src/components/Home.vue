@@ -1,13 +1,15 @@
 <template>
   <div class="max-w-7xl mx-auto px-4 py-8">
     <!-- Hero Section -->
-    <div class="text-center mb-12">
-      <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+    <div class="text-center mb-12 space-y-3">
+      <h1 class="text-4xl font-bold text-gray-900 dark:text-white">
         Alien RPG Tools
       </h1>
-      <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">
-        A comprehensive suite of generators and calculators for the Alien RPG
-        tabletop game
+      <p class="text-xl text-gray-600 dark:text-gray-300">
+        A suite of generators and calculators for the Alien RPG tabletop game
+      </p>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        Compatible with both the original Alien RPG and the Evolved Edition
       </p>
       <p class="text-gray-600 dark:text-gray-400">
         By
@@ -23,104 +25,28 @@
     </div>
 
     <!-- Tools Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-      <!-- Encounters Card -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
       <div
-        class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
+        v-for="tool in tools"
+        :key="tool.id"
+        class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow flex flex-col"
       >
         <div class="mb-4">
           <div class="text-4xl mb-3">
-            ⚔️
+            {{ tool.icon }}
           </div>
-          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Encounters
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+            {{ tool.name }}
           </h2>
         </div>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">
-          Generate tactical encounters, environmental hazards, and ship
-          encounters for your campaigns. Perfect for creating challenging
-          scenarios that keep your players on their toes.
+        <p class="text-gray-600 dark:text-gray-400 mb-6 flex-1">
+          {{ tool.description }}
         </p>
         <button
           class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors"
-          @click="$emit('navigate', 'encounters')"
+          @click="$emit('navigate', tool.id)"
         >
-          Open Encounters →
-        </button>
-      </div>
-
-      <!-- Jobs Card -->
-      <div
-        class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
-      >
-        <div class="mb-4">
-          <div class="text-4xl mb-3">
-            💼
-          </div>
-          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Jobs
-          </h2>
-        </div>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">
-          Create engaging job opportunities for your crew. Generate cargo runs,
-          military missions, and exploration expeditions with unique objectives
-          and complications.
-        </p>
-        <button
-          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors"
-          @click="$emit('navigate', 'job-generator')"
-        >
-          Open Jobs →
-        </button>
-      </div>
-
-      <!-- Space Travel Card -->
-      <div
-        class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
-      >
-        <div class="mb-4">
-          <div class="text-4xl mb-3">
-            🚀
-          </div>
-          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Space Travel
-          </h2>
-        </div>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">
-          Calculate travel times, crew paychecks, and maintenance schedules for
-          your starship. Keep track of fuel consumption and operational costs
-          across the galaxy.
-        </p>
-        <button
-          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors"
-          @click="$emit('navigate', 'space-travel')"
-        >
-          Open Space Travel →
-        </button>
-      </div>
-
-      <!-- Star Systems Card -->
-      <div
-        class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
-      >
-        <div class="mb-4">
-          <div class="text-4xl mb-3">
-            🌌
-          </div>
-          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Star Systems
-          </h2>
-        </div>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">
-          Generate complete star systems, planets, and colonies. Create detailed
-          worlds with unique characteristics and settlement details for your
-          explorations.
-        </p>
-        <button
-          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors"
-          @click="$emit('navigate', 'alien-rpg')"
-        >
-          Open Star Systems →
+          Open {{ tool.name }} →
         </button>
       </div>
     </div>
@@ -178,10 +104,10 @@
           </div>
           <div>
             <h3 class="font-semibold text-gray-900 dark:text-white mb-1">
-              Local Storage
+              No Account Needed
             </h3>
             <p class="text-gray-600 dark:text-gray-400">
-              All data stored locally - no account needed
+              Everything runs locally in the app
             </p>
           </div>
         </div>
@@ -204,17 +130,17 @@
           </div>
           <div>
             <h3 class="font-semibold text-gray-900 dark:text-white mb-1">
-              Desktop App
+              Desktop &amp; Browser
             </h3>
             <p class="text-gray-600 dark:text-gray-400">
-              Available as a native desktop application
+              Available as a native desktop app and playable in the browser
             </p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Terminal Simulator Section -->
+    <!-- Diegetic Simulators Section -->
     <div
       class="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-md p-8 border border-gray-200 dark:border-gray-700 mt-12"
     >
@@ -222,35 +148,34 @@
         <!-- Text Content -->
         <div>
           <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Also Check Out: Alien RPG Terminal Simulator
+            Also Check Out: Diegetic Simulators
           </h2>
           <p class="text-gray-600 dark:text-gray-300 mb-4">
-            Beyond our tools and generators, Ties That Bind Gaming offers a
-            <strong>Terminal Simulator</strong> - an authentic interface tool
-            designed to complement Alien RPG campaigns. Create immersive colony
-            control stations, spaceship controls, information hubs, and
-            emergency systems that make your players feel like they're truly
-            commanding real installations in the cold depths of space.
+            <strong>Diegetic Simulators</strong> gives your players terminals and
+            databases they operate directly, at the table or remotely. Boot up a
+            colony control station, a ship's computer, or a research archive and
+            let the crew read logs, run diagnostics, lock doors, and trigger
+            alarms as if they were really there.
           </p>
           <p class="text-gray-600 dark:text-gray-300 mb-6">
-            Perfect for adding atmosphere to your sessions with realistic
-            terminal interfaces, system controls, and interactive elements.
+            Perfect for adding atmosphere and hands-on immersion to your Alien
+            RPG sessions.
           </p>
           <a
-            href="https://terminal.tiesthatbindgaming.com/"
+            href="https://diegeticsimulators.com"
             target="_blank"
             rel="noopener noreferrer"
             class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded transition-colors"
           >
-            Visit Terminal Simulator →
+            Visit Diegetic Simulators →
           </a>
         </div>
 
         <!-- Image -->
         <div class="flex justify-center lg:justify-end">
           <img
-            :src="terminalSimulatorImage"
-            alt="Alien RPG Terminal Simulator Interface"
+            :src="diegeticSimulatorsImage"
+            alt="Diegetic Simulators interface"
             class="rounded-lg shadow-md w-full h-auto"
           >
         </div>
@@ -260,7 +185,73 @@
 </template>
 
 <script setup>
-import terminalSimulatorImage from "../../public/terminal-simulator.webp";
+import diegeticSimulatorsImage from "../../public/diegetic-simulators.webp";
 
 defineEmits(["navigate"]);
+
+const tools = [
+  {
+    id: "star-system-generator",
+    name: "Star System Generator",
+    icon: "🌌",
+    description:
+      "Generate complete star systems, planets, and colonies with rules-based detail for your explorations.",
+  },
+  {
+    id: "space-travel-tool",
+    name: "Space Travel Tool",
+    icon: "🚀",
+    description:
+      "Calculate FTL travel time, crew pay periods, and hypersleep event rolls from a ship's FTL rating and distance.",
+  },
+  {
+    id: "combat-tracker",
+    name: "Combat Tracker",
+    icon: "⚔️",
+    description:
+      "Track initiative order, health, and status effects for every combatant in a fight.",
+  },
+  {
+    id: "contract-cargo-generator",
+    name: "Contract & Cargo Generator",
+    icon: "📦",
+    description:
+      "Generate freighter contracts: the cargo, destination, pay, complications, and the catch nobody mentioned.",
+  },
+  {
+    id: "panic-tool",
+    name: "Stress & Panic Tool",
+    icon: "😰",
+    description:
+      "Roll stress dice and resolve Panic results for the crew, following the Alien RPG panic table.",
+  },
+  {
+    id: "npc-generator",
+    name: "NPC Generator",
+    icon: "🧑‍🚀",
+    description:
+      "Generate a quick NPC: career, motivation, appearance, personality, and an optional hidden agenda.",
+  },
+  {
+    id: "creature-generator",
+    name: "Creature Generator",
+    icon: "👽",
+    description:
+      "Build an original alien threat with attributes, attacks, and special abilities for your table.",
+  },
+  {
+    id: "ship-generator",
+    name: "Ship Generator",
+    icon: "🛸",
+    description:
+      "Generate a ship: its class, condition, crew, cargo, and the story behind its last voyage.",
+  },
+  {
+    id: "supply-salvage-generator",
+    name: "Supply & Salvage Generator",
+    icon: "🔧",
+    description:
+      "Roll up supplies and salvage recovered from derelicts, stations, and wrecks.",
+  },
+];
 </script>

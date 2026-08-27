@@ -9,8 +9,8 @@
 
       <div class="space-y-4 text-base">
         <p>
-          <strong>Alien RPG Tools</strong> is a comprehensive desktop
-          application suite for
+          <strong>Alien RPG Tools</strong> is a suite of generators and
+          calculators for the Alien RPG tabletop game by
           <a
             href="https://www.tiesthatbindgaming.com"
             target="_blank"
@@ -18,8 +18,13 @@
             class="text-blue-600 dark:text-blue-400 hover:underline"
           >
             Ties That Bind Gaming
-          </a>
-          , providing tools for the Alien RPG tabletop game.
+          </a>. The same tools run on the Ties That Bind Gaming website; this
+          app bundles them for offline desktop use and in-browser play.
+        </p>
+
+        <p>
+          The generators are compatible with both the original
+          <strong>Alien RPG</strong> and the <strong>Evolved Edition</strong>.
         </p>
 
         <div>
@@ -28,20 +33,40 @@
           </h3>
           <ul class="list-disc list-inside space-y-1">
             <li>
-              <strong>Encounters</strong> - Generate tactical encounters and
-              environmental hazards
+              <strong>Star System Generator</strong> - Complete star systems,
+              planets, and colonies
             </li>
             <li>
-              <strong>Job Generator</strong> - Create engaging job opportunities
-              for your campaigns
+              <strong>Space Travel Tool</strong> - FTL travel time, pay periods,
+              and hypersleep event rolls
             </li>
             <li>
-              <strong>Space Travel Tool</strong> - Calculate travel times,
-              paychecks, and maintenance schedules
+              <strong>Combat Tracker</strong> - Initiative, health, and status
+              for every combatant
             </li>
             <li>
-              <strong>Star System Generator</strong> - Generate complete star
-              systems, planets, and colonies
+              <strong>Contract &amp; Cargo Generator</strong> - Freighter
+              contracts, cargo, pay, and complications
+            </li>
+            <li>
+              <strong>Stress &amp; Panic Tool</strong> - Stress rolls and Panic
+              table resolution
+            </li>
+            <li>
+              <strong>NPC Generator</strong> - Careers, motivations, and hidden
+              agendas
+            </li>
+            <li>
+              <strong>Creature Generator</strong> - Original alien threats with
+              attacks and abilities
+            </li>
+            <li>
+              <strong>Ship Generator</strong> - Ship class, condition, crew, and
+              cargo
+            </li>
+            <li>
+              <strong>Supply &amp; Salvage Generator</strong> - Supplies and
+              salvage from derelicts and wrecks
             </li>
           </ul>
         </div>
@@ -54,8 +79,7 @@
             Version:
             <span
               class="font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
-              >1.1.4</span
-            >
+            >{{ APP_VERSION }}</span>
           </p>
         </div>
 
@@ -80,62 +104,38 @@
       class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-8 border border-gray-200 dark:border-gray-700"
     >
       <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
-        Alien RPG Terminal Simulator
+        Diegetic Simulators
       </h2>
 
       <div class="space-y-4 text-base">
         <p>
-          <strong>Terminal Simulator</strong> is an authentic interface tool
-          designed specifically for Alien RPG campaigns. Create immersive
-          spaceship command decks, facility control stations, and emergency
-          systems that make your players feel like they're truly commanding real
-          vessels and installations in the cold depths of space.
+          <strong>Diegetic Simulators</strong> gives your players terminals and
+          databases they operate directly, at the table or remotely. Boot up a
+          colony control station, a ship's computer, or a research archive and
+          let the crew read logs, run diagnostics, lock doors, and trigger
+          alarms as if they were really aboard.
         </p>
 
         <div>
           <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
-            Perfect For Alien RPG:
+            Good For Alien RPG:
           </h3>
           <ul class="list-disc list-inside space-y-1">
             <li>
-              <strong>Spaceship Systems</strong> - Authentically control
-              engines, life support, communications, and navigation
+              <strong>Ship &amp; station systems</strong> - Navigation, life
+              support, comms, and power as interactive panels
             </li>
             <li>
-              <strong>Colony Management</strong> - Lock doors, trigger alarms,
-              and manage security protocols
+              <strong>Facility control</strong> - Doors, alarms, and security
+              protocols the players actually operate
             </li>
             <li>
-              <strong>Emergency Response</strong> - Create tense moments with
-              distress signals and system failures
+              <strong>Databases &amp; logs</strong> - Personnel files, incident
+              reports, and mission data to dig through
             </li>
             <li>
-              <strong>Crew Operations</strong> - Track vital information, logs,
-              and mission-critical data
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
-            Key Features for Your Campaign:
-          </h3>
-          <ul class="list-disc list-inside space-y-1">
-            <li>
-              <strong>Layered Security</strong> - Multi-level access controls
-              for command authority
-            </li>
-            <li>
-              <strong>Real-Time Operator Sync</strong> - All players see updates
-              instantly
-            </li>
-            <li>
-              <strong>Multimedia Integration</strong> - Embed briefings,
-              distress calls, and video feeds
-            </li>
-            <li>
-              <strong>Mission Critical Controls</strong> - Password-protected
-              emergency procedures
+              <strong>Remote play</strong> - Everyone sees the same terminal
+              state in real time
             </li>
           </ul>
         </div>
@@ -143,12 +143,12 @@
         <div class="pt-4">
           <p>
             <a
-              href="https://terminal.tiesthatbindgaming.com/"
+              href="https://diegeticsimulators.com"
               target="_blank"
               rel="noopener noreferrer"
               class="text-blue-600 dark:text-blue-400 hover:underline font-semibold"
             >
-              Explore Alien RPG Terminal Simulator →
+              Explore Diegetic Simulators →
             </a>
           </p>
         </div>
@@ -163,7 +163,7 @@
     >
       <div class="dark:border-gray-700">
         <p class="text-sm text-gray-600 dark:text-gray-400">
-          © 2025 Ties That Bind Gaming™. All rights reserved.
+          © 2026 Ties That Bind Gaming™. All rights reserved.
         </p>
         <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
           This is a fan-made tool for Alien RPG and is not officially affiliated
@@ -174,4 +174,6 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { APP_VERSION } from "@/shared/version.js";
+</script>

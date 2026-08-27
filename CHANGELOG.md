@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2026-08-27
+
+### Changed
+
+- **Tools replaced with the current website generators.** The app now ships
+  exactly the nine Alien RPG generators from tiesthatbindgaming.com, copied
+  verbatim from the `ties-that-bind-gaming` repo: Star System Generator, Space
+  Travel Tool, Combat Tracker, Contract & Cargo Generator, Stress & Panic Tool,
+  NPC Generator, Creature Generator, Ship Generator, Supply & Salvage Generator.
+- Removed the old Encounters and Jobs tools (Contract & Cargo Generator is the
+  successor to Jobs).
+- Consolidated styling into a single global Tailwind entry plus a design-token
+  shim (`src/shared/styles/ttbg-tokens.css`) so the ported components render
+  unchanged; light mode now toggles a `light` class on `<html>`.
+
+### Added
+
+- **itch.io auto-publish.** Tagging a `v*` release now pushes Windows, Linux,
+  and browser-playable builds to itch.io via butler
+  (`abstract-engineer/alien-rpg-tools`), alongside the existing GitHub Release.
+- `npm run build:web` / `vite.config.web.js`: a standalone SPA build
+  (`dist-web/`) for the itch.io HTML5 channel and other static hosts.
+- TypeScript support for the ported `<script lang="ts">` components
+  (`typescript`, `typescript-eslint`, `tsconfig.json`).
+- `ITCH_SETUP.md`.
+
+### Removed
+
+- Terminal Simulator references. The product is now
+  [Diegetic Simulators](https://diegeticsimulators.com); links and copy in the
+  Home, About, and Footer views were updated and the promo image replaced.
+
 ## [1.0.0] - 2025-12-18
 
 ### Added

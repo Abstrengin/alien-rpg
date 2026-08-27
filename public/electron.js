@@ -272,7 +272,7 @@ const template = [
               type: "info",
               title: "About Alien RPG Tools",
               message: "Alien RPG Tools",
-              detail: `Version: 1.0.0\n\nCopyright © 2025 Ties That Bind Gaming™\nAll rights reserved.\n\nVisit us at: tiesthatbindgaming.com`,
+              detail: `Version: ${app.getVersion()}\n\nCopyright © 2026 Ties That Bind Gaming™\nAll rights reserved.\n\nVisit us at: tiesthatbindgaming.com`,
               buttons: ["Visit Ties That Bind Gaming", "Close"],
             })
             .then((result) => {

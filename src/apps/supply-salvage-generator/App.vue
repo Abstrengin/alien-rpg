@@ -17,7 +17,7 @@
               title="ABOUT THIS TOOL"
             >
               <p class="mb-3">
-                <strong>Star System Generator</strong> generates complete star systems, planets, and colonies with rules-based detail for your Alien RPG campaigns.
+                <strong>Supply & Salvage Generator</strong> rolls up supplies and salvage recovered from derelicts, stations, and wrecks.
               </p>
               <p class="mb-3">
                 Part of the Alien RPG Tools suite by

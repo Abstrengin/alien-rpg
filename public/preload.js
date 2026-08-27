@@ -1,11 +1,12 @@
 const { contextBridge, ipcRenderer } = require("electron");
+const { version: appVersion } = require("../package.json");
 
 // Expose limited APIs to renderer process
 contextBridge.exposeInMainWorld("electron", {
   isElectron: true,
   app: {
-    getName: () => "Alien RPG Generator",
-    getVersion: () => "1.0.0",
+    getName: () => "Alien RPG Tools",
+    getVersion: () => appVersion,
   },
   // Update event listeners
   on: (event, callback) => {

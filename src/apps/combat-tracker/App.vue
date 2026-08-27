@@ -17,7 +17,7 @@
               title="ABOUT THIS TOOL"
             >
               <p class="mb-3">
-                <strong>Star System Generator</strong> generates complete star systems, planets, and colonies with rules-based detail for your Alien RPG campaigns.
+                <strong>Combat Tracker</strong> tracks initiative order, health, and status effects for every combatant in an Alien RPG fight.
               </p>
               <p class="mb-3">
                 Part of the Alien RPG Tools suite by
