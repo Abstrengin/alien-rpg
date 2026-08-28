@@ -6,7 +6,8 @@ on the Ties That Bind Gaming website; this project bundles them as a desktop app
 (Windows / Linux) and a browser-playable build distributed on itch.io.
 
 The generators are compatible with both the original Alien RPG and the Evolved
-Edition. Built with Vue 3, Vite, and Electron.
+Edition. Built with Vue 3, Vite, and Electron, with an Android wrapper via
+Capacitor ([docs/ANDROID.md](docs/ANDROID.md)).
 
 ## Tools
 
@@ -45,6 +46,7 @@ npm install
 
 npm run dev            # Vite dev server (SPA, hot reload)
 npm run electron-dev   # Electron shell + Vite
+npm run android:open   # build:web + cap sync + open Android Studio
 
 npm run lint           # ESLint (with --fix)
 ```
@@ -56,6 +58,7 @@ npm run lint           # ESLint (with --fix)
 | `npm run build` | `vite.config.js` | `dist/alien-rpg-tools.js` + `.css` | Electron shell, WordPress `<ttbg-app>` embed (library / custom-element mode) |
 | `npm run build:web` | `vite.config.web.js` | `dist-web/` | Standalone SPA for itch.io HTML5, or any static host (`base: "./"`) |
 | `npm run electron-build` | – | `dist/*Portable*.exe`, `dist/*.AppImage` | Desktop distribution |
+| `npm run android:bundle` | Capacitor | `android/app/build/outputs/*.aab` / `*.apk` | Android distribution ([docs/ANDROID.md](docs/ANDROID.md)) |
 
 ## Releasing
 

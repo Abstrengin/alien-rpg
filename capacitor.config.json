@@ -1,0 +1,8 @@
+{
+  "appId": "com.tiesthatbindgaming.ttbgtools",
+  "appName": "Alien RPG Tools",
+  "webDir": "dist-web",
+  "android": {
+    "backgroundColor": "#030712"
+  }
+}
