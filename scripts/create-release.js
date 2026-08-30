@@ -5,9 +5,7 @@ import { readFileSync } from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const packageJson = JSON.parse(
-  readFileSync(path.join(__dirname, "..", "package.json"), "utf-8")
-);
+const packageJson = JSON.parse(readFileSync(path.join(__dirname, "..", "package.json"), "utf-8"));
 const version = packageJson.version;
 
 const releaseDir = path.join(__dirname, "..", `Release/v${version}`);
@@ -30,18 +28,12 @@ try {
   fs.copyFileSync(exePath, path.join(releaseDir, exeFile));
 
   // Copy docs
-  fs.copyFileSync(
-    path.join(__dirname, "..", "README.md"),
-    path.join(releaseDir, "README.md")
-  );
+  fs.copyFileSync(path.join(__dirname, "..", "README.md"), path.join(releaseDir, "README.md"));
   fs.copyFileSync(
     path.join(__dirname, "..", "CHANGELOG.md"),
-    path.join(releaseDir, "CHANGELOG.md")
+    path.join(releaseDir, "CHANGELOG.md"),
   );
-  fs.copyFileSync(
-    path.join(__dirname, "..", "LICENSE"),
-    path.join(releaseDir, "LICENSE")
-  );
+  fs.copyFileSync(path.join(__dirname, "..", "LICENSE"), path.join(releaseDir, "LICENSE"));
 
   console.log(`✅ Release packaged to: ${releaseDir}`);
   console.log(`   - ${exeFile}`);

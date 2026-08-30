@@ -3,6 +3,8 @@
     <div class="flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto px-4 py-8">
       <aside class="w-full lg:w-64 lg:flex-shrink-0">
         <div class="sticky top-24 space-y-4">
+          <EditionSelector />
+
           <div
             class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 border border-gray-200 dark:border-gray-700"
           >
@@ -12,12 +14,18 @@
             >
               APP INFO
             </button>
-            <Modal
-              v-model:model-value="showAppInfo"
-              title="ABOUT THIS TOOL"
-            >
+            <Modal v-model:model-value="showAppInfo" title="ABOUT THIS TOOL">
               <p class="mb-3">
-                <strong>NPC Generator</strong> generates a quick NPC: career, motivation, appearance, personality, and an optional hidden agenda and crew relationship.
+                <strong>NPC Generator</strong> rolls a table-ready NPC with a full statblock:
+                attributes, health, skills, talent, gear and cash, plus the four things the rulebook
+                says you need for every NPC (name, appearance, trait and goal).
+              </p>
+              <p class="mb-3">
+                Build one from the nine <strong>career tables</strong> (canonical names, appearance,
+                personal agendas, signature items and gear, with attributes spread over the
+                rulebook's 14 points), or pull a ready-made archetype from the book's
+                <strong>typical NPC roster</strong>. An optional encounter roll says where the crew
+                first sees them.
               </p>
               <p class="mb-3">
                 Part of the Alien RPG Tools suite by
@@ -27,16 +35,14 @@
                   rel="noopener noreferrer"
                   class="text-blue-600 dark:text-blue-400 hover:underline"
                 >
-                  Ties That Bind Gaming
-                </a>.
+                  Ties That Bind Gaming </a
+                >.
               </p>
               <p class="mb-3">
                 Compatible with both the original <strong>Alien RPG</strong> and the
                 <strong>Evolved Edition</strong>.
               </p>
-              <p class="mb-0">
-                <strong>Version:</strong> {{ APP_VERSION }}
-              </p>
+              <p class="mb-0"><strong>Version:</strong> {{ APP_VERSION }}</p>
               <template #footer>
                 <button
                   class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full"
@@ -57,9 +63,7 @@
         </div>
       </aside>
 
-      <main
-        class="flex-1 w-full text-gray-900 dark:text-gray-100 transition-colors duration-200"
-      >
+      <main class="flex-1 w-full text-gray-900 dark:text-gray-100 transition-colors duration-200">
         <Tool :key="resetKey" />
       </main>
     </div>
@@ -70,6 +74,7 @@
 import { ref, onMounted } from "vue";
 import Tool from "./tool.vue";
 import Modal from "@/shared/components/Modal.vue";
+import EditionSelector from "@/shared/components/EditionSelector.vue";
 import { isElectron } from "@/shared/theme.js";
 import { APP_VERSION } from "@/shared/version.js";
 

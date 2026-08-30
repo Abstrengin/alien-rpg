@@ -12,12 +12,12 @@ place. Not yet done: release signing config, release AAB, Play/itch listing, CI.
 
 ## Layout
 
-| Path | What it is | Tracked in git |
-|---|---|---|
-| `capacitor.config.json` | App id, name, `webDir: dist-web` | yes |
-| `android/` | Generated native Gradle project | yes |
-| `android/app/src/main/assets/public/` | Copied web build | no (`.gitignore`) |
-| `dist-web/` | `npm run build:web` output | no (`.gitignore`) |
+| Path                                  | What it is                       | Tracked in git    |
+| ------------------------------------- | -------------------------------- | ----------------- |
+| `capacitor.config.json`               | App id, name, `webDir: dist-web` | yes               |
+| `android/`                            | Generated native Gradle project  | yes               |
+| `android/app/src/main/assets/public/` | Copied web build                 | no (`.gitignore`) |
+| `dist-web/`                           | `npm run build:web` output       | no (`.gitignore`) |
 
 `android/` is committed so the native config (icons, manifest, signing setup)
 survives. Regenerate it any time with `npx cap add android` after deleting it.
@@ -42,7 +42,7 @@ survives. Regenerate it any time with `npx cap add android` after deleting it.
   git-ignored - it is machine-specific). Android Studio writes it on first open;
   for the CLI create it by hand. **Use forward slashes** - backslashes are parsed
   as `.properties` escapes and `\U`, `\A` etc. produce `java.io.IOException:
-  Invalid file path` at build time:
+Invalid file path` at build time:
   ```
   sdk.dir=C:/Users/gamer/AppData/Local/Android/Sdk
   ```
@@ -126,10 +126,10 @@ with `apksigner` before it will install.
 The launcher icon is generated from two committed source images by
 [scripts/gen-android-icons.mjs](../scripts/gen-android-icons.mjs) (`sharp`):
 
-| Source (1024x1024, in `assets/`) | Used for |
-|---|---|
-| `icon-foreground-src.png` | planet/ring/moon on transparent bg - the adaptive foreground and the legacy icons |
-| `icon-full-src.png` | same mark on solid `#030712` - the Play Store 512 listing icon |
+| Source (1024x1024, in `assets/`) | Used for                                                                          |
+| -------------------------------- | --------------------------------------------------------------------------------- |
+| `icon-foreground-src.png`        | planet/ring/moon on transparent bg - the adaptive foreground and the legacy icons |
+| `icon-full-src.png`              | same mark on solid `#030712` - the Play Store 512 listing icon                    |
 
 ```bash
 npm run android:icons     # rewrites android/app/src/main/res/mipmap-* and the
@@ -165,7 +165,7 @@ is only 256x256, too small to reuse as an icon source.
 ## Distribution options
 
 - **itch.io**: `butler push android/app/build/outputs/apk/release/app-release.apk
-  abstract-engineer/alien-rpg-tools:android --userversion <version>`. Add an
+abstract-engineer/alien-rpg-tools:android --userversion <version>`. Add an
   `android` channel alongside `windows` / `linux` / `html5`.
 - **Google Play**: upload the `.aab` from `android:bundle`. One-time $25
   developer account. Play re-signs with an app-signing key; keep your upload

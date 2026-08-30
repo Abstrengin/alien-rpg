@@ -12,12 +12,10 @@
             >
               APP INFO
             </button>
-            <Modal
-              v-model:model-value="showAppInfo"
-              title="ABOUT THIS TOOL"
-            >
+            <Modal v-model:model-value="showAppInfo" title="ABOUT THIS TOOL">
               <p class="mb-3">
-                <strong>Space Travel Tool</strong> calculates FTL travel time, crew pay periods, and hypersleep event rolls from a ship's FTL rating and the distance in parsecs.
+                <strong>Space Travel Tool</strong> calculates FTL travel time, crew pay periods, and
+                hypersleep event rolls from a ship's FTL rating and the distance in parsecs.
               </p>
               <p class="mb-3">
                 Part of the Alien RPG Tools suite by
@@ -27,16 +25,14 @@
                   rel="noopener noreferrer"
                   class="text-blue-600 dark:text-blue-400 hover:underline"
                 >
-                  Ties That Bind Gaming
-                </a>.
+                  Ties That Bind Gaming </a
+                >.
               </p>
               <p class="mb-3">
                 Compatible with both the original <strong>Alien RPG</strong> and the
                 <strong>Evolved Edition</strong>.
               </p>
-              <p class="mb-0">
-                <strong>Version:</strong> {{ APP_VERSION }}
-              </p>
+              <p class="mb-0"><strong>Version:</strong> {{ APP_VERSION }}</p>
               <template #footer>
                 <button
                   class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full"
@@ -57,9 +53,7 @@
         </div>
       </aside>
 
-      <main
-        class="flex-1 w-full text-gray-900 dark:text-gray-100 transition-colors duration-200"
-      >
+      <main class="flex-1 w-full text-gray-900 dark:text-gray-100 transition-colors duration-200">
         <Tool :key="resetKey" />
       </main>
     </div>

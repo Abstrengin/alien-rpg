@@ -1,12 +1,15 @@
 <script setup lang="ts">
 /**
  * AlienRPGSalvageGenerator.vue
- * Supply & Salvage Generator for Alien RPG and Alien RPG – Evolved Edition (Free League Publishing).
+ * Supply & Salvage Generator for the ALIEN RPG.
  *
- * Randomises what a crew finds when searching a location.
- * Location types and item prompts are original TTBG content.
+ * The item catalogue reproduces the gear tables from the rulebooks (weight, cost,
+ * effect, and air/power supply ratings), and the supply roll panel follows the
+ * Consumables rules. Published by Free League.
+ * Location types, condition tiers and site detail are original TTBG content.
  */
 import { ref, computed } from 'vue';
+import { useEdition } from '@/shared/edition';
 
 function pick<T>(items: readonly T[]): T {
   return items[Math.floor(Math.random() * items.length)]!;
@@ -14,683 +17,445 @@ function pick<T>(items: readonly T[]): T {
 function d6(): number {
   return Math.floor(Math.random() * 6) + 1;
 }
-function d3(): number {
-  return Math.ceil(Math.random() * 3);
-}
 
-// ─── Location types ────────────────────────────────────────────────────────
+type Edition = 'evolved' | 'core';
 
-const LOCATION_TYPES = [
-  'Personal Locker',
-  'Crew Quarters',
-  'Cargo Bay',
-  'Medical Bay',
-  'Armory',
-  'Engineering Storage',
-  'Abandoned Habitat',
-  'Derelict Ship',
-  'Emergency Cache',
-  'Corporate Supply Drop',
-] as const;
+// ─── Gear catalogue ──────────────────────────────────────────────────────────
 
-type LocationType = (typeof LOCATION_TYPES)[number];
+type Category =
+  | 'Pistols'
+  | 'Rifles'
+  | 'Heavy weapons'
+  | 'Close combat'
+  | 'Suits & armor'
+  | 'Data storage'
+  | 'Diagnostics & display'
+  | 'Vision devices'
+  | 'Tools'
+  | 'Medical supplies'
+  | 'Pharmaceuticals'
+  | 'Food & drink';
 
-// ─── Condition ─────────────────────────────────────────────────────────────
-
-const CONDITIONS = ['Intact', 'Worn', 'Damaged', 'Looted', 'Sealed'] as const;
-type Condition = (typeof CONDITIONS)[number];
-
-const CONDITION_DETAIL: Record<Condition, string> = {
-  Intact: 'Everything present. Supplies are usable as-is.',
-  Worn: 'Functional but visibly aged. Consumables may be reduced by half.',
-  Damaged: 'Significant deterioration. Some items non-functional; check each one.',
-  Looted: 'Someone got here first. Only overlooked or hidden items remain.',
-  Sealed: 'Airtight or locked. Contents are preserved, and whoever sealed it had a reason.',
+type Item = {
+  name: string;
+  category: Category;
+  /** Encumbrance in item slots. 0 is a tiny item, null cannot be carried at all. */
+  weight: number | null;
+  weightLabel: string;
+  /** Numeric value used for the haul total. Null where the book prints a range or "varies". */
+  value: number | null;
+  costLabel: string;
+  effect: string;
+  air?: number;
+  power?: number;
+  /** Firearms can be reloaded; the book prices a reload at 5% of the weapon. */
+  firearm?: boolean;
+  onlyIn?: Edition;
+  /** Values the Evolved Edition prints differently. */
+  evolved?: Partial<Pick<Item, 'value' | 'costLabel' | 'effect' | 'power'>>;
 };
 
-// ─── Item pools per location ───────────────────────────────────────────────
+const CATALOGUE: readonly Item[] = [
+  // Pistols
+  { name: 'M4A3 Service Pistol', category: 'Pistols', weight: 0.5, weightLabel: '½', value: 200, costLabel: '$200', effect: 'Bonus +2, damage 1, Medium range', firearm: true },
+  { name: '.357 Magnum Revolver', category: 'Pistols', weight: 1, weightLabel: '1', value: 300, costLabel: '$300', effect: 'Bonus +1, damage 2, Medium range', firearm: true },
+  { name: 'Rexim RXF-M5 EVA Pistol', category: 'Pistols', weight: 0.5, weightLabel: '½', value: 400, costLabel: '$400', effect: 'Bonus +1, damage 1, Medium range, armor piercing', firearm: true },
+  { name: 'Watatsumi DV-303 Bolt Gun', category: 'Pistols', weight: 1, weightLabel: '1', value: 400, costLabel: '$400', effect: 'Damage 3, Short range, armor piercing, single-shot', firearm: true },
+  { name: 'Weyland ES-4 Electrostatic Pistol', category: 'Pistols', weight: 0.5, weightLabel: '½', value: 1000, costLabel: '$1,000', effect: 'Bonus +1, damage 1 (stun), armor piercing', firearm: true, onlyIn: 'evolved' },
 
-interface ItemEntry {
+  // Rifles
+  { name: 'Armat M41A Pulse Rifle', category: 'Rifles', weight: 1, weightLabel: '1', value: 800, costLabel: '$800', effect: 'Bonus +1, damage 2, Long range, armor piercing, full auto', firearm: true },
+  { name: 'AK-4047 Pulse Assault Rifle', category: 'Rifles', weight: 1, weightLabel: '1', value: 500, costLabel: '$500', effect: 'Damage 2, Long range, full auto', firearm: true },
+  { name: 'M42A Scope Rifle', category: 'Rifles', weight: 1, weightLabel: '1', value: 1000, costLabel: '$1,000', effect: 'Bonus +2, damage 2, Extreme range, armor piercing', firearm: true },
+  { name: 'Armat Model 37A2 12 Gauge Pump Action', category: 'Rifles', weight: 1, weightLabel: '1', value: 500, costLabel: '$500', effect: 'Bonus +2, damage 3, Short range, armor doubled', firearm: true },
+  { name: 'SpaceSub ASSO-400 Harpoon Grappling Gun', category: 'Rifles', weight: 1, weightLabel: '1', value: 300, costLabel: '$300', effect: 'Damage 1, Medium range, armor doubled, single-shot', firearm: true },
+  { name: 'Armat XM99A Phased Plasma Pulse Rifle', category: 'Rifles', weight: 2, weightLabel: '2', value: 20000, costLabel: '$20,000', effect: 'Damage 4, Extreme range, armor piercing', power: 5, firearm: true },
+
+  // Heavy weapons
+  { name: 'Armat U1 Grenade Launcher', category: 'Heavy weapons', weight: 0.5, weightLabel: '½', value: 600, costLabel: '$600', effect: 'Bonus +1, Blast 9, Long range, takes other grenade types', firearm: true },
+  { name: 'Armat M41AE2 Heavy Pulse Rifle', category: 'Heavy weapons', weight: 2, weightLabel: '2', value: 1500, costLabel: '$1,500', effect: 'Bonus +1, damage 3, Extreme range, armor piercing, full auto', firearm: true },
+  { name: 'M56A2 Smart Gun', category: 'Heavy weapons', weight: 3, weightLabel: '3', value: 6000, costLabel: '$6,000', effect: 'Bonus +3, damage 3, Long range, armor piercing, full auto', firearm: true },
+  { name: 'M240 Incinerator Unit', category: 'Heavy weapons', weight: 1, weightLabel: '1', value: 500, costLabel: '$500', effect: 'Damage 2, Medium range, sets the target on fire (Intensity 9)', firearm: true },
+  { name: 'UA 571-C Sentry Gun', category: 'Heavy weapons', weight: null, weightLabel: '—', value: 12000, costLabel: '$12,000', effect: 'Bonus +2, damage 4, Extreme range, fires with RANGED COMBAT 8. Too heavy to carry.' },
+  { name: 'G2 Electroshock Grenade', category: 'Heavy weapons', weight: 0.5, weightLabel: '½', value: 400, costLabel: '$400', effect: 'Stun effect (−2), Medium range when thrown' },
+
+  // Close combat
+  { name: 'Blunt instrument', category: 'Close combat', weight: 1, weightLabel: '1', value: null, costLabel: 'No value', effect: 'Bonus +1, damage 1' },
+  { name: 'Knife', category: 'Close combat', weight: 0.5, weightLabel: '½', value: 50, costLabel: '$50', effect: 'Damage 2' },
+  { name: 'Stun Baton', category: 'Close combat', weight: 0.5, weightLabel: '½', value: 80, costLabel: '$80', effect: 'Bonus +1, damage 1, stun effect', power: 5, evolved: { power: 2 } },
+  { name: 'Mechanical Cutting Torch', category: 'Close combat', weight: 1, weightLabel: '1', value: 300, costLabel: '$300', effect: 'Damage 3, armor piercing. Doubles as a tool (HEAVY MACHINERY +2).', power: 5, evolved: { power: 3 } },
+
+  // Suits & armor
+  { name: 'M3 Personnel Armor', category: 'Suits & armor', weight: 1, weightLabel: '1', value: 1200, costLabel: '$1,200', effect: 'Armor Rating 6. Built-in comm unit and PDT.', evolved: { effect: 'Armor Level 2. Built-in comm unit and PDT.' } },
+  { name: 'IRC Mk.50 Compression Suit', category: 'Suits & armor', weight: 1, weightLabel: '1', value: 15000, costLabel: '$15,000', effect: 'Armor Rating 2, vacuum protection, MOBILITY −1', air: 5, evolved: { value: 4000, costLabel: '$4,000', effect: 'Vacuum protection, comm unit, head light, MOBILITY −1' } },
+  { name: 'IRC Mk.35 Pressure Suit', category: 'Suits & armor', weight: 2, weightLabel: '2', value: 2000, costLabel: '$2,000', effect: 'Armor Rating 5, vacuum protection, MOBILITY −2', air: 4, evolved: { effect: 'Armor Level 1, vacuum protection, MOBILITY −2' } },
+  { name: 'Eco All-World Survival Suit', category: 'Suits & armor', weight: 2, weightLabel: '2', value: 30000, costLabel: '$30,000', effect: 'Armor Rating 4, EVA hardsuit with its own thrusters', air: 6, evolved: { effect: 'Armor Level 2, vacuum protection, comm unit, head light, MOBILITY +2 in zero-G' } },
+  { name: 'Weyland-Yutani APEsuit', category: 'Suits & armor', weight: 1, weightLabel: '1', value: 5000, costLabel: '$5,000', effect: 'Armor Rating 3, SURVIVAL +3, impervious to caustic substances', air: 4, evolved: { effect: 'Armor Level 1 (3 against acid), SURVIVAL +2, protects the wearer against facehugs' } },
+  { name: 'Kevlar Riot Vest', category: 'Suits & armor', weight: 0.5, weightLabel: '½', value: 600, costLabel: '$600', effect: 'Armor Level 1. Standard for colonial law enforcement and security.', onlyIn: 'evolved' },
+  { name: 'P-5000 Power Loader', category: 'Suits & armor', weight: null, weightLabel: '—', value: 50000, costLabel: '$50,000', effect: 'Armor Rating 3, HEAVY MACHINERY and CLOSE COMBAT +3. Needs HEAVY MACHINERY 2 to operate.' },
+
+  // Data storage
+  { name: 'Long-Data Disc', category: 'Data storage', weight: 0, weightLabel: 'Tiny', value: 30, costLabel: '$30', effect: 'Holds up to 10 zettabytes of data' },
+  { name: 'Magnetic Tape', category: 'Data storage', weight: 0, weightLabel: 'Tiny', value: 5, costLabel: '$5', effect: 'Holds up to 120 terabytes. Produces no detectable wave signal.' },
+
+  // Diagnostics & display
+  { name: 'Computer Terminal', category: 'Diagnostics & display', weight: null, weightLabel: '—', value: null, costLabel: 'Varies', effect: 'Access and process data (COMTECH roll)' },
+  { name: 'PR-PUT Uplink Terminal', category: 'Diagnostics & display', weight: 1, weightLabel: '1', value: 9000, costLabel: '$9,000', effect: 'Remote control a spacecraft (COMTECH roll)' },
+  { name: 'Seegson C-Series Magnetic Tape Recorder', category: 'Diagnostics & display', weight: 0.5, weightLabel: '½', value: null, costLabel: '$50–$100', effect: 'Record and play music (MANIPULATION +1)' },
+  { name: 'Samani E-Series Watch', category: 'Diagnostics & display', weight: 0, weightLabel: 'Tiny', value: 50, costLabel: '$50', effect: 'Tracks time, oxygen and pressure levels (SURVIVAL +1)' },
+  { name: 'Personal Data Transmitter', category: 'Diagnostics & display', weight: 0, weightLabel: 'Tiny', value: 100, costLabel: '$100', effect: 'Monitors location and vitals' },
+  { name: 'IFF Transponder', category: 'Diagnostics & display', weight: 0, weightLabel: 'Tiny', value: 250, costLabel: '$250', effect: 'Prevents Sentry Gun friendly fire' },
+  { name: 'Data Transmitter Cards', category: 'Diagnostics & display', weight: 0, weightLabel: 'Tiny', value: 50, costLabel: '$50', effect: 'Transfer of audiovisual data' },
+  { name: 'Seegson P-DAT', category: 'Diagnostics & display', weight: 0.5, weightLabel: '½', value: 500, costLabel: '$500', effect: 'Coordinate info for field teams' },
+  { name: 'Seegson System Diagnostic Device', category: 'Diagnostics & display', weight: 1, weightLabel: '1', value: 300, costLabel: '$300', effect: 'Troubleshoot computer systems (COMTECH +2)' },
+  { name: 'HoloTab', category: 'Diagnostics & display', weight: null, weightLabel: '—', value: 100000, costLabel: '$100,000', effect: 'Strategic analysis platform (COMMAND +2)' },
+  { name: 'Modular Computing Device', category: 'Diagnostics & display', weight: null, weightLabel: '—', value: 8000, costLabel: '$8,000', effect: 'Full audiovisual holographic projector' },
+
+  // Vision devices
+  { name: 'Optical Scope', category: 'Vision devices', weight: 0, weightLabel: 'Tiny', value: 60, costLabel: '$60', effect: 'Increases a weapon range one category, aimed shots only' },
+  { name: 'Hi-beam Flashlight', category: 'Vision devices', weight: 0.5, weightLabel: '½', value: 45, costLabel: '$45', effect: 'Removes the effect of darkness in a zone' },
+  { name: 'Binoculars', category: 'Vision devices', weight: 0.5, weightLabel: '½', value: 100, costLabel: '$100', effect: 'OBSERVATION +2 at Long range or more' },
+  { name: 'M314 Motion Tracker', category: 'Vision devices', weight: 1, weightLabel: '1', value: 1200, costLabel: '$1,200', effect: 'Detects movement, Long range indoors', power: 5 },
+  { name: 'M316 Motion Tracker', category: 'Vision devices', weight: 0, weightLabel: 'Tiny', value: 3000, costLabel: '$3,000', effect: 'Detects movement, Medium range indoors', power: 5 },
+  { name: 'Head-Mounted Sight', category: 'Vision devices', weight: 0.5, weightLabel: '½', value: 200, costLabel: '$200', effect: 'Remote control of a Sentry Gun' },
+  { name: 'Neuro Visor', category: 'Vision devices', weight: 1, weightLabel: '1', value: 10000, costLabel: '$10,000', effect: 'Monitor and interface with a hypersleeping subject' },
+  { name: '"Pups" Mapping Device', category: 'Vision devices', weight: 1, weightLabel: '1', value: 50000, costLabel: '$50,000 each', effect: 'Scans one zone per round' },
+  { name: 'Seegson Microview-2000SE', category: 'Vision devices', weight: null, weightLabel: '—', value: null, costLabel: '$25,000 per deck', effect: 'Location tracking' },
+
+  // Tools
+  { name: 'Maintenance Jack', category: 'Tools', weight: 1, weightLabel: '1', value: 150, costLabel: '$150', effect: 'HEAVY MACHINERY +1. Opens unpowered airlocks and diverts power.' },
+  { name: 'Electronic Tools', category: 'Tools', weight: 0.5, weightLabel: '½', value: 250, costLabel: '$250', effect: 'COMTECH +1 in relevant situations' },
+  { name: 'Power Cell', category: 'Tools', weight: 0.5, weightLabel: '½', value: 30, costLabel: '$30', effect: 'Restores an item to full power supply', onlyIn: 'evolved' },
+
+  // Medical supplies
+  { name: 'Personal Medkit', category: 'Medical supplies', weight: 0.25, weightLabel: '¼', value: 50, costLabel: '$50', effect: 'MEDICAL AID +2 for first aid. Single use.' },
+  { name: 'Surgical Kit', category: 'Medical supplies', weight: 0.5, weightLabel: '½', value: null, costLabel: '$25–$200', effect: 'MEDICAL AID +1 to prevent death. Base damage 2 as a weapon.', evolved: { value: 200, costLabel: '$200', effect: 'MEDICAL AID +2 for first aid and surgery on critical injuries. Base damage 2 as a weapon.' } },
+  { name: 'AutoDoc', category: 'Medical supplies', weight: null, weightLabel: '—', value: 500000, costLabel: '$500,000', effect: 'Automated treatment, MEDICAL AID 6. Cannot perform complicated surgery.', evolved: { effect: 'Automated treatment, MEDICAL AID 8. Cannot treat critical injuries needing surgery.' } },
+  { name: 'Pauling MedPod', category: 'Medical supplies', weight: null, weightLabel: '—', value: 2000000, costLabel: '$2,000,000', effect: 'Autonomous surgical unit, MEDICAL AID 10 (cannot push)', evolved: { effect: 'Autonomous surgical unit, MEDICAL AID 12 (cannot push)' } },
+
+  // Pharmaceuticals
+  { name: 'Neversleep pills (one dose)', category: 'Pharmaceuticals', weight: 0, weightLabel: 'Tiny', value: 2, costLabel: '$2', effect: 'Stress level +1, removes the need for sleep for a day. No stress relief that day.' },
+  { name: 'Hydr8tion (one dose)', category: 'Pharmaceuticals', weight: 0, weightLabel: 'Tiny', value: 5, costLabel: '$5', effect: 'Eliminates the fatigue from hypersleep. No side effects.' },
+  { name: 'Naproleve (one dose)', category: 'Pharmaceuticals', weight: 0, weightLabel: 'Tiny', value: 20, costLabel: '$20', effect: 'Reduces stress level to zero. A second dose in the same shift gives −1 to all skill rolls.' },
+  { name: 'Recreational drugs', category: 'Pharmaceuticals', weight: 0, weightLabel: 'Tiny', value: null, costLabel: '$5–$60,000', effect: 'Typically stress level +1 or −1, with a hangover penalty on repeat doses' },
+  { name: 'X-Drugs', category: 'Pharmaceuticals', weight: 0, weightLabel: 'Tiny', value: null, costLabel: 'Varies', effect: 'Boost strength, endurance and the senses. Prolonged use causes hallucinations, seizures, psychosis, stroke.' },
+
+  // Food & drink
+  { name: 'Prefab meal', category: 'Food & drink', weight: 0.25, weightLabel: '¼', value: 10, costLabel: '$10', effect: 'Food Supply +1', evolved: { effect: 'Satisfies food needs for one day' } },
+  { name: 'Water bottle', category: 'Food & drink', weight: 0.25, weightLabel: '¼', value: null, costLabel: '$2–$100', effect: 'Water Supply +1', evolved: { effect: 'Satisfies water needs for one day' } },
+  { name: '"Bug juice" protein drink', category: 'Food & drink', weight: 0.25, weightLabel: '¼', value: 5, costLabel: '$5', effect: 'Food and Water Supply +1' },
+  { name: 'Carbonated beverage', category: 'Food & drink', weight: 0.25, weightLabel: '¼', value: 2, costLabel: '$2', effect: 'Water Supply +1' },
+  { name: 'Candy bar', category: 'Food & drink', weight: 0.25, weightLabel: '¼', value: 15, costLabel: '$15', effect: 'Satisfies food needs for one day', onlyIn: 'evolved' },
+  { name: 'Colony specialty meal', category: 'Food & drink', weight: 0.25, weightLabel: '¼', value: null, costLabel: '$20–$300', effect: 'Satisfies food needs for one day, stress level −1', onlyIn: 'evolved' },
+  { name: 'Aspen beer (or worse)', category: 'Food & drink', weight: 0.25, weightLabel: '¼', value: null, costLabel: 'Varies', effect: 'Watered down and tastes like piss, but it gets the job done', onlyIn: 'evolved' },
+];
+
+// ─── Locations ───────────────────────────────────────────────────────────────
+
+type LocationDef = {
+  name: string;
+  categories: readonly Category[];
+  detail: readonly string[];
+};
+
+const LOCATIONS: readonly LocationDef[] = [
+  {
+    name: 'Personal Locker',
+    categories: ['Pharmaceuticals', 'Food & drink', 'Data storage', 'Diagnostics & display', 'Close combat', 'Pistols'],
+    detail: [
+      'The name stencil has been scratched off and redone twice.',
+      'Someone taped a photo inside the door. The face has been cut out.',
+      'A shift roster is pinned inside, with the last four weeks crossed through.',
+      'It was already open. The lock plate is bent outward, not inward.',
+    ],
+  },
+  {
+    name: 'Crew Quarters',
+    categories: ['Food & drink', 'Pharmaceuticals', 'Data storage', 'Diagnostics & display', 'Vision devices', 'Close combat'],
+    detail: [
+      'The bunk is made. Nobody makes a bunk before an emergency.',
+      'Two mattresses have been dragged into one corner, away from the vent.',
+      'A tape recorder is still running, hours into silence.',
+      'Someone has written a countdown on the bulkhead in grease pencil.',
+    ],
+  },
+  {
+    name: 'Cargo Bay',
+    categories: ['Tools', 'Food & drink', 'Suits & armor', 'Diagnostics & display'],
+    detail: [
+      'Half the pallets are strapped for a burn that never happened.',
+      'The manifest on the wall does not match the crate count. It is short by two.',
+      'A power loader sits mid-lift, still gripping nothing.',
+      'Cargo netting has been cut, not unclipped.',
+    ],
+  },
+  {
+    name: 'Medical Bay',
+    categories: ['Medical supplies', 'Pharmaceuticals', 'Diagnostics & display'],
+    detail: [
+      'The autodoc is mid-cycle with no patient in it.',
+      'Restraint straps on the table are cut through from the inside.',
+      'Someone logged the same vitals every hour for two days, then stopped.',
+      'The sharps bin is overflowing. Nobody emptied it.',
+    ],
+  },
+  {
+    name: 'Armory',
+    categories: ['Pistols', 'Rifles', 'Heavy weapons', 'Close combat', 'Suits & armor'],
+    detail: [
+      'The rack log shows three weapons signed out and none signed back.',
+      'The door was secured from the inside.',
+      'Spent casings on the floor, but no scoring on the walls.',
+      'Someone stacked crates against the door and then moved them again.',
+    ],
+  },
+  {
+    name: 'Engineering Storage',
+    categories: ['Tools', 'Diagnostics & display', 'Vision devices', 'Suits & armor'],
+    detail: [
+      'A maintenance schedule board is filled in three weeks ahead in the same hand.',
+      'The coolant smell is stronger in here than the readouts admit.',
+      'Someone has removed every ladder from the compartment.',
+      'A junction panel is open with the tools still inside it.',
+    ],
+  },
+  {
+    name: 'Abandoned Habitat',
+    categories: ['Food & drink', 'Pharmaceuticals', 'Tools', 'Data storage', 'Vision devices'],
+    detail: [
+      'The heating still runs. The atmosphere plant is still ticking over.',
+      'Dust lies evenly except on one chair.',
+      'Every internal door has been left open and wedged.',
+      'The colony log ends mid-sentence, in the middle of a supply requisition.',
+    ],
+  },
+  {
+    name: 'Derelict Ship',
+    categories: ['Tools', 'Suits & armor', 'Diagnostics & display', 'Data storage', 'Vision devices', 'Close combat'],
+    detail: [
+      'The distress beacon is on a repeating loop with no voice on it.',
+      'Hypersleep pods are open. All of them. From the inside.',
+      "MU/TH/UR answers, but only about the weather at a colony that isn't here.",
+      'The reactor is at idle. Someone throttled it back deliberately.',
+    ],
+  },
+  {
+    name: 'Emergency Cache',
+    categories: ['Food & drink', 'Medical supplies', 'Vision devices', 'Suits & armor', 'Pharmaceuticals'],
+    detail: [
+      'The seal is intact and the inspection date is eleven years past.',
+      'Someone has already been here and put everything back neatly.',
+      'The inventory card lists two items that are not in the box.',
+      'It is bolted down harder than a cache this cheap deserves.',
+    ],
+  },
+  {
+    name: 'Corporate Supply Drop',
+    categories: ['Diagnostics & display', 'Data storage', 'Medical supplies', 'Pharmaceuticals', 'Tools', 'Vision devices'],
+    detail: [
+      'Marked with a project code and no destination.',
+      'The drop was logged to a colony that closed two years ago.',
+      'Everything is company-new and nothing is company-branded.',
+      'A clause on the packing slip forbids opening it. It is already open.',
+    ],
+  },
+];
+
+// ─── Conditions ──────────────────────────────────────────────────────────────
+
+type ConditionDef = {
   name: string;
   detail: string;
-  rarity: 'common' | 'uncommon' | 'rare';
-}
+  /** Supply ratings on anything found are reduced by this much. */
+  supplyPenalty: number;
+  /** Suggested resale multiplier applied to the haul value. */
+  valueMultiplier: number;
+  /** Looted sites have already been stripped of the good stuff. */
+  valueCeiling: number | null;
+  min: number;
+  max: number;
+};
 
-const POOL: Record<LocationType, ItemEntry[]> = {
-  'Personal Locker': [
-    {
-      name: 'Personal medkit',
-      detail: 'Bandages, antiseptic, one stimpack. Well-used.',
-      rarity: 'common',
-    },
-    {
-      name: 'Work clothes (spare set)',
-      detail: 'Company-branded jumpsuit or civilian clothes, folded.',
-      rarity: 'common',
-    },
-    {
-      name: 'Data pad',
-      detail: 'Personal notes, messages, and photos. Battery may be low.',
-      rarity: 'common',
-    },
-    {
-      name: 'Ration bars (×D6)',
-      detail: 'High-calorie, vacuum-sealed. Unpleasant but edible.',
-      rarity: 'common',
-    },
-    {
-      name: 'Folding knife',
-      detail: 'A tool as much as a weapon. Blade still sharp.',
-      rarity: 'common',
-    },
-    {
-      name: 'Personal firearm',
-      detail: 'Compact sidearm with one partial magazine. No holster.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Cash scrip / trade chips',
-      detail: 'Small denominations. Enough to buy a round or two.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Contraband',
-      detail:
-        "Something the owner didn't want found. Could be narcotics, a banned device, or someone else's property.",
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Encrypted data chip',
-      detail: 'No label. Small enough to have been hidden deliberately.',
-      rarity: 'rare',
-    },
-    {
-      name: 'Personal sidearm + spare mag',
-      detail: "Registered. The owner's name is etched on the grip.",
-      rarity: 'rare',
-    },
+const CONDITIONS: readonly ConditionDef[] = [
+  { name: 'Intact', detail: 'Everything present and serviceable. Supply ratings are as printed.', supplyPenalty: 0, valueMultiplier: 1, valueCeiling: null, min: 4, max: 6 },
+  { name: 'Worn', detail: 'Functional but visibly aged. Knock one off every supply rating.', supplyPenalty: 1, valueMultiplier: 0.75, valueCeiling: null, min: 3, max: 5 },
+  { name: 'Damaged', detail: 'Significant deterioration. Knock two off every supply rating, and check each item before trusting it.', supplyPenalty: 2, valueMultiplier: 0.5, valueCeiling: null, min: 2, max: 4 },
+  { name: 'Looted', detail: 'Someone got here first and took anything worth carrying. Only the overlooked remains.', supplyPenalty: 0, valueMultiplier: 1, valueCeiling: 5000, min: 1, max: 3 },
+  { name: 'Sealed', detail: 'Airtight or locked, so the contents are preserved. Whoever sealed it had a reason.', supplyPenalty: 0, valueMultiplier: 1, valueCeiling: null, min: 4, max: 6 },
+];
+
+// ─── Consumables reference ───────────────────────────────────────────────────
+
+const CONSUMABLES: Record<Edition, readonly { name: string; interval: string }[]> = {
+  evolved: [
+    { name: 'Air', interval: 'After every stretch, and after strenuous activity like combat or a MOBILITY roll.' },
+    { name: 'Ammo', interval: 'After firing your weapon.' },
+    { name: 'Power', interval: 'After each use, or as the item description indicates.' },
   ],
-
-  'Crew Quarters': [
-    { name: 'Ration pack (×D6)', detail: 'Standard issue meals, vacuum-sealed.', rarity: 'common' },
-    {
-      name: 'Sleeping kit',
-      detail: 'Compact bedroll, thermal sheet. Smells lived-in.',
-      rarity: 'common',
-    },
-    {
-      name: 'Multi-tool',
-      detail: 'Twelve functions, most of them useful. One blade is snapped.',
-      rarity: 'common',
-    },
-    {
-      name: 'Stim injector (×D3)',
-      detail: 'Single-use stimulants. Sharp focus, rough comedown.',
-      rarity: 'common',
-    },
-    { name: 'Personal medkit', detail: 'Bandages, antiseptic, two stimpacks.', rarity: 'common' },
-    {
-      name: 'Alcohol ration',
-      detail: 'Sealed flask. Company-approved quantity.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Binoculars (compact)',
-      detail: 'Short-range optical zoom. Battery-powered night mode.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Crew manifest fragment',
-      detail: 'Partial printout. Names, cabin assignments, shift rotations.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Hidden stash',
-      detail: 'Behind a panel or under a mattress. Roll again for contents.',
-      rarity: 'rare',
-    },
-    {
-      name: 'Emergency beacon',
-      detail: 'Handheld distress transmitter. Battery full.',
-      rarity: 'rare',
-    },
-  ],
-
-  'Cargo Bay': [
-    {
-      name: 'Sealed cargo crates (×D3)',
-      detail: 'Contents unknown without opening. Manifested or unmarked.',
-      rarity: 'common',
-    },
-    {
-      name: 'Industrial hand tools',
-      detail: 'Pry bars, bolt cutters, impact driver.',
-      rarity: 'common',
-    },
-    {
-      name: 'Packing material',
-      detail: 'Foam, strapping, thermal wrap. Could insulate or conceal something.',
-      rarity: 'common',
-    },
-    {
-      name: 'Freight loader battery',
-      detail: 'Heavy power cell for cargo equipment. Partially charged.',
-      rarity: 'common',
-    },
-    {
-      name: 'Contaminated crate',
-      detail: 'Bio-hazard tape. Whatever is inside is dead. Or was.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Fuel cell (partial)',
-      detail: 'One standard fuel cell at roughly 40% capacity.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Spare EVA suit (folded)',
-      detail: 'Intact but unserviced. Seals should be tested before use.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Locked container',
-      detail: 'Combination or key lock. No label. Weighs more than it should.',
-      rarity: 'uncommon',
-    },
-    {
-      name: "Smuggler's void-space cache",
-      detail: 'Hidden behind a false wall. Contents highly variable, and illegal.',
-      rarity: 'rare',
-    },
-    {
-      name: 'Weapons crate (sealed)',
-      detail: 'Military packaging. Contents match what conflicts were happening nearby.',
-      rarity: 'rare',
-    },
-  ],
-
-  'Medical Bay': [
-    {
-      name: 'Medkit (full)',
-      detail: 'Comprehensive kit: bandages, antiseptic, suture strips, two stimpacks.',
-      rarity: 'common',
-    },
-    {
-      name: 'Stimpacks (×D6)',
-      detail: 'Single-use auto-injectors. Standard military grade.',
-      rarity: 'common',
-    },
-    {
-      name: 'Painkillers',
-      detail: 'Oral tablets, blister pack. Dulls pain; impairs fine motor control at high dose.',
-      rarity: 'common',
-    },
-    {
-      name: 'Surgical tools',
-      detail: 'Clamps, scalpels, retractors. Sterile-packaged.',
-      rarity: 'common',
-    },
-    {
-      name: 'IV fluids (saline)',
-      detail: 'Two bags. Used for stabilisation and hydration.',
-      rarity: 'common',
-    },
-    {
-      name: 'Sedatives',
-      detail: 'Injectable. Enough for a full surgical dose or several smaller ones.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Diagnostic scanner (hand-held)',
-      detail: 'Reads vitals, flags trauma, flags contamination. Battery at 60%.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Anti-toxin injectors (×D3)',
-      detail: 'Broad-spectrum. Not tailored for xenobiological agents.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Cryo-stasis drug kit',
-      detail: 'Induces temporary stasis. For emergency medical evacuation.',
-      rarity: 'rare',
-    },
-    {
-      name: 'Experimental compound',
-      detail: 'Unlabelled vial. Company watermark on the case. No trial data attached.',
-      rarity: 'rare',
-    },
-  ],
-
-  Armory: [
-    {
-      name: 'Shotgun shells (×D6×3)',
-      detail: 'Standard buckshot. Stored in a dry case.',
-      rarity: 'common',
-    },
-    {
-      name: 'Pistol magazines (×D3)',
-      detail: 'Standard caliber, loaded. Fits most sidearms.',
-      rarity: 'common',
-    },
-    {
-      name: 'Combat knife',
-      detail: 'Fixed-blade, military pattern. Sheath included.',
-      rarity: 'common',
-    },
-    {
-      name: 'Riot shield',
-      detail: 'Polycarbonate, full torso coverage. Scratched but solid.',
-      rarity: 'common',
-    },
-    { name: 'Stun baton', detail: 'Non-lethal, rechargeable. Full charge.', rarity: 'common' },
-    {
-      name: 'Shotgun',
-      detail: 'Pump-action, six-round capacity. Sling attached.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Assault rifle + magazine',
-      detail: 'Military pattern. One full magazine, no spare.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Flamethrower (partial tank)',
-      detail: 'Functional. Tank is at roughly half capacity. Handle with care.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'M41A Pulse Rifle',
-      detail: 'USCMC pattern. Full magazine, one spare. Grenade launcher empty.',
-      rarity: 'rare',
-    },
-    {
-      name: 'Smart gun rig',
-      detail: 'Body-mounted tracking system and belt-fed weapon. Heavy. Requires training.',
-      rarity: 'rare',
-    },
-  ],
-
-  'Engineering Storage': [
-    {
-      name: 'Repair tools (full set)',
-      detail: 'Wrenches, calibration tools, soldering kit. Industrial grade.',
-      rarity: 'common',
-    },
-    {
-      name: 'Duct tape (×2 rolls)',
-      detail: 'Emergency-grade. Rated for vacuum environments.',
-      rarity: 'common',
-    },
-    {
-      name: 'Welding torch (fuel partial)',
-      detail: 'Cuts and seals. Tank at roughly half capacity.',
-      rarity: 'common',
-    },
-    {
-      name: 'Spare fuses and circuit boards',
-      detail: 'A mix of ratings. Enough for basic electrical repairs.',
-      rarity: 'common',
-    },
-    {
-      name: 'Hydraulic sealant',
-      detail: 'Two tubes. Used for patching pipes and pressure seals.',
-      rarity: 'common',
-    },
-    {
-      name: 'Power cell (full)',
-      detail: 'Standard equipment battery. Compatible with most gear.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Cutting torch',
-      detail: 'Plasma-edge cutter. Breaches most doors and bulkheads.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Atmospheric sensor',
-      detail: 'Detects breathable air, toxins, and pressure. Battery 80%.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'EMP device',
-      detail: 'Compact electromagnetic pulse emitter. Single use. Illegal on most stations.',
-      rarity: 'rare',
-    },
-    {
-      name: 'Reactor bypass module',
-      detail: 'Used to override safety interlocks. Has the look of something custom-built.',
-      rarity: 'rare',
-    },
-  ],
-
-  'Abandoned Habitat': [
-    {
-      name: 'Emergency ration packs (×D6)',
-      detail: 'Long-shelf-life survival rations. Taste of cardboard and regret.',
-      rarity: 'common',
-    },
-    {
-      name: 'Water purification tablets',
-      detail: 'One foil strip. Enough for a few litres.',
-      rarity: 'common',
-    },
-    {
-      name: 'Survival blanket',
-      detail: 'Mylar thermal wrap. Compact. Still sealed.',
-      rarity: 'common',
-    },
-    {
-      name: 'Personal effects',
-      detail: "A previous occupant's belongings: photos, letters, trinkets. No value. All context.",
-      rarity: 'common',
-    },
-    {
-      name: 'First aid kit (depleted)',
-      detail: 'Most supplies used. Bandages remain. One stimpack taped inside the lid.',
-      rarity: 'common',
-    },
-    {
-      name: 'Portable radio transmitter',
-      detail: 'Short-range only. Battery drained. Could be recharged.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Log recorder',
-      detail: 'The last entries explain something about why this place is abandoned.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Improvised weapon',
-      detail: 'A makeshift blade or club. Someone needed it badly enough to build it.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Sealed airlock supply cache',
-      detail: "Pre-positioned emergency kit. Whoever placed it didn't come back for it.",
-      rarity: 'rare',
-    },
-    {
-      name: 'Distress beacon (active)',
-      detail: "Signal has been broadcasting for an unknown duration. Someone hasn't responded yet.",
-      rarity: 'rare',
-    },
-  ],
-
-  'Derelict Ship': [
-    {
-      name: 'Ship tools (partial set)',
-      detail: 'Loose tools in a bay locker. Enough for basic repairs.',
-      rarity: 'common',
-    },
-    {
-      name: 'Emergency rations (×D6)',
-      detail: 'Survival packs from the emergency locker. Shelf life unknown.',
-      rarity: 'common',
-    },
-    {
-      name: 'EVA suit (damaged)',
-      detail: 'Suit integrity compromised. Seals cracked. Usable in atmosphere; risky in vacuum.',
-      rarity: 'common',
-    },
-    {
-      name: 'Navigation data chip',
-      detail: 'Last logged route still intact. Where was this ship going?',
-      rarity: 'common',
-    },
-    {
-      name: 'Fuel cells (partial, ×D3)',
-      detail: 'Various charge levels. Some drained entirely. Salvageable.',
-      rarity: 'common',
-    },
-    {
-      name: 'Personal firearm (crew)',
-      detail: 'Found near the remains. One magazine, partially spent.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Ship log terminal',
-      detail: 'Final entries accessible. The last crew had time to record what happened.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Cryopod (occupied, sealed)',
-      detail: 'One pod still running on emergency power. Occupant unknown.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Black box recorder',
-      detail: 'Hardened flight recorder. Everything is in here. So is the liability.',
-      rarity: 'rare',
-    },
-    {
-      name: 'Classified cargo manifest',
-      detail: 'What was declared, and what was actually aboard, are very different things.',
-      rarity: 'rare',
-    },
-  ],
-
-  'Emergency Cache': [
-    {
-      name: 'Emergency medkit',
-      detail: 'Vacuum-sealed. Full supplies: bandages, antiseptic, four stimpacks.',
-      rarity: 'common',
-    },
-    {
-      name: 'Emergency rations (×D6×2)',
-      detail: 'Long-shelf-life packs. Marked with a red cross and a date.',
-      rarity: 'common',
-    },
-    {
-      name: 'Water ration pouches (×D6)',
-      detail: 'Sealed sterile water. Enough for several days.',
-      rarity: 'common',
-    },
-    { name: 'Flashlight (×2)', detail: 'High-output LED. Batteries full.', rarity: 'common' },
-    {
-      name: 'Survival blankets (×D3)',
-      detail: 'Mylar thermal wraps. Compact and effective.',
-      rarity: 'common',
-    },
-    {
-      name: 'Signal flares (×4)',
-      detail: 'Atmospheric only. Burns bright orange for 90 seconds.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Emergency beacon',
-      detail: 'Distress transmitter. Press and hold to activate. Long-range.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Compact firearm + ammo',
-      detail: 'Standard cache sidearm. Two magazines. For emergencies.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Escape pod activation key',
-      detail: 'Magnetic key with serial number. One assigned pod. Where is it docked?',
-      rarity: 'rare',
-    },
-    {
-      name: 'Sealed orders envelope',
-      detail:
-        "Instructions from a chain of command that may no longer exist. Someone's contingency plan.",
-      rarity: 'rare',
-    },
-  ],
-
-  'Corporate Supply Drop': [
-    {
-      name: 'Ration cases (×D6 cases)',
-      detail: 'Branded packaging. Contents meet the minimum caloric standard.',
-      rarity: 'common',
-    },
-    {
-      name: 'Standard medkits (×D3)',
-      detail: 'Corporate-issue. Functional but not stocked for trauma care.',
-      rarity: 'common',
-    },
-    {
-      name: 'Company-issue work gear',
-      detail: 'Helmets, gloves, high-vis vests. PPE checked to box-ticking standard.',
-      rarity: 'common',
-    },
-    {
-      name: 'Communications handset (×D3)',
-      detail: 'Short-range radios. Pre-set to a company channel.',
-      rarity: 'common',
-    },
-    {
-      name: 'Survey equipment',
-      detail: 'Ground-coring drill, sample containers, atmospheric probe.',
-      rarity: 'common',
-    },
-    {
-      name: 'Company-issued sidearms (×D3)',
-      detail: 'Standard security pistols with two magazines each. Serialised.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Power generator (portable)',
-      detail: 'Fuel-cell generator. Enough to run a forward outpost for 72 hours.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Research specimens (sealed)',
-      detail: 'Biohazard-marked containers. The field notes are missing.',
-      rarity: 'uncommon',
-    },
-    {
-      name: 'Encrypted company terminal',
-      detail:
-        "Requires credentials. Someone in the company's chain of command has the access codes.",
-      rarity: 'rare',
-    },
-    {
-      name: 'Classified cargo (no manifest)',
-      detail: 'Marked only with a project code. No description. No assigned recipient listed.',
-      rarity: 'rare',
-    },
+  core: [
+    { name: 'Air', interval: 'Every Turn, and after every strenuous activity like combat or a MOBILITY roll.' },
+    { name: 'Water', interval: 'Once per day, and after every strenuous activity like combat or a MOBILITY roll.' },
+    { name: 'Food', interval: 'Once per day.' },
+    { name: 'Power', interval: 'Situational, depending on the gear used.' },
   ],
 };
 
-// ─── Rarity config ─────────────────────────────────────────────────────────
+/** Average number of supply rolls needed to run a rating down to zero. */
+const ROLLS_TO_ZERO: Record<number, number> = { 1: 6, 2: 9, 3: 11, 4: 13, 5: 14, 6: 15 };
 
-const RARITY_LABEL: Record<ItemEntry['rarity'], string> = {
-  common: 'Common',
-  uncommon: 'Uncommon',
-  rare: 'Rare',
+// ─── State ───────────────────────────────────────────────────────────────────
+
+type FoundItem = Item & { air?: number; power?: number; reload: number | null };
+
+type Haul = {
+  location: string;
+  condition: ConditionDef;
+  detail: string | null;
+  items: FoundItem[];
+  totalWeight: number;
+  strengthNeeded: number;
+  totalValue: number;
+  variableCount: number;
+  uncarriable: number;
 };
 
-const RARITY_COLOR: Record<ItemEntry['rarity'], string> = {
-  common:
-    'text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]',
-  uncommon: 'text-yellow-400',
-  rare: 'text-[var(--color-brand-red-light)]',
-};
-
-const RARITY_DOT: Record<ItemEntry['rarity'], string> = {
-  common: 'bg-[var(--color-surface-400)]',
-  uncommon: 'bg-yellow-400',
-  rare: 'bg-[var(--color-brand-red-light)]',
-};
-
-// ─── Item count by condition ───────────────────────────────────────────────
-
-function itemCountForCondition(condition: Condition): number {
-  switch (condition) {
-    case 'Intact':
-      return 3 + d3(); // 4–6
-    case 'Worn':
-      return 2 + d3(); // 3–5
-    case 'Damaged':
-      return 1 + d3(); // 2–4
-    case 'Looted':
-      return d3(); // 1–3
-    case 'Sealed':
-      return 3 + d3(); // 4–6
-  }
-}
-
-// ─── Weight rare items for Intact/Sealed, exclude for Looted ──────────────
-
-function weightedPick(pool: ItemEntry[], condition: Condition): ItemEntry {
-  let filtered = pool;
-  if (condition === 'Looted') {
-    // Rare items were taken first; bias heavily toward uncommon/common
-    filtered = pool.filter((i) => i.rarity !== 'rare' || Math.random() < 0.15);
-    if (!filtered.length) filtered = pool;
-  }
-  return pick(filtered);
-}
-
-// ─── State ─────────────────────────────────────────────────────────────────
-
-interface SalvageResult {
-  location: LocationType;
-  condition: Condition;
-  conditionDetail: string;
-  items: ItemEntry[];
-}
-
-const locationType = ref<LocationType>('Cargo Bay');
-const condition = ref<Condition>('Intact');
+// Edition is chosen once in the sidebar and shared by every tool in the suite.
+const edition = useEdition();
+const locationName = ref('Cargo Bay');
+const conditionName = ref('Intact');
 const randomiseLocation = ref(false);
 const randomiseCondition = ref(false);
-const result = ref<SalvageResult | null>(null);
+const includeDetail = ref(true);
+const haul = ref<Haul | null>(null);
+const copied = ref(false);
 
-function generate(): void {
-  const loc = randomiseLocation.value
-    ? pick(LOCATION_TYPES as unknown as LocationType[])
-    : locationType.value;
-  const cond = randomiseCondition.value
-    ? pick(CONDITIONS as unknown as Condition[])
-    : condition.value;
+// Supply roll panel
+const supplyRating = ref(5);
+const lastSupplyRoll = ref<{ dice: number[]; lost: number; before: number; after: number } | null>(
+  null
+);
 
-  const pool = POOL[loc];
-  const count = itemCountForCondition(cond);
+const availableItems = computed(() =>
+  CATALOGUE.filter((item) => !item.onlyIn || item.onlyIn === edition.value)
+);
 
-  // Pick without replacement
-  const shuffled = [...pool].sort(() => Math.random() - 0.5);
-  const picked: ItemEntry[] = [];
-  const used = new Set<string>();
-
-  for (const item of shuffled) {
-    if (picked.length >= count) break;
-    const key = item.name;
-    if (used.has(key)) continue;
-    // Apply looted weighting
-    if (cond === 'Looted' && item.rarity === 'rare' && Math.random() > 0.15) continue;
-    used.add(key);
-    picked.push(item);
-  }
-  // Fallback if looted filter removed too many
-  if (!picked.length) picked.push(pick(pool));
-
-  result.value = {
-    location: loc,
-    condition: cond,
-    conditionDetail: CONDITION_DETAIL[cond],
-    items: picked,
-  };
-
-  // Sync selectors if randomised
-  if (randomiseLocation.value) locationType.value = loc;
-  if (randomiseCondition.value) condition.value = cond;
+/** Applies the Evolved Edition's printed values where they differ from the Core Rulebook. */
+function resolve(item: Item): Item {
+  if (edition.value !== 'evolved' || !item.evolved) return item;
+  return { ...item, ...item.evolved };
 }
 
-const resultItemCount = computed(() => result.value?.items.length ?? 0);
+function generate(): void {
+  const location = randomiseLocation.value
+    ? pick(LOCATIONS)
+    : (LOCATIONS.find((l) => l.name === locationName.value) ?? LOCATIONS[0]!);
+  const condition = randomiseCondition.value
+    ? pick(CONDITIONS)
+    : (CONDITIONS.find((c) => c.name === conditionName.value) ?? CONDITIONS[0]!);
+
+  const pool = availableItems.value
+    .map(resolve)
+    .filter((item) => location.categories.includes(item.category))
+    .filter((item) => condition.valueCeiling === null || (item.value ?? 0) <= condition.valueCeiling);
+
+  const count = Math.min(pool.length, condition.min + Math.floor(Math.random() * (condition.max - condition.min + 1)));
+  const shuffled = [...pool].sort(() => Math.random() - 0.5).slice(0, Math.max(1, count));
+
+  const items: FoundItem[] = shuffled.map((item) => ({
+    ...item,
+    air: item.air === undefined ? undefined : Math.max(0, item.air - condition.supplyPenalty),
+    power: item.power === undefined ? undefined : Math.max(0, item.power - condition.supplyPenalty),
+    // The rulebook prices a full reload at about 5% of the weapon itself.
+    reload: item.firearm && item.value !== null ? Math.round(item.value * 0.05) : null,
+  }));
+
+  const totalWeight = items.reduce((sum, item) => sum + (item.weight ?? 0), 0);
+  const rawValue = items.reduce((sum, item) => sum + (item.value ?? 0), 0);
+
+  haul.value = {
+    location: location.name,
+    condition,
+    detail: includeDetail.value ? pick(location.detail) : null,
+    items,
+    totalWeight,
+    strengthNeeded: Math.ceil(totalWeight / 2),
+    totalValue: Math.round(rawValue * condition.valueMultiplier),
+    variableCount: items.filter((item) => item.value === null).length,
+    uncarriable: items.filter((item) => item.weight === null).length,
+  };
+
+  if (randomiseLocation.value) locationName.value = location.name;
+  if (randomiseCondition.value) conditionName.value = condition.name;
+}
+
+function clearOutput(): void {
+  haul.value = null;
+}
+
+function rollSupply(): void {
+  const before = supplyRating.value;
+  if (before < 1) return;
+  // Roll stress dice equal to the current rating, to a maximum of six.
+  const dice = Array.from({ length: Math.min(6, before) }, () => d6());
+  const lost = dice.filter((die) => die === 1).length;
+  const after = Math.max(0, before - lost);
+  lastSupplyRoll.value = { dice, lost, before, after };
+  supplyRating.value = after;
+}
+
+function resetSupply(): void {
+  supplyRating.value = 5;
+  lastSupplyRoll.value = null;
+}
+
+const haulText = computed(() => {
+  const h = haul.value;
+  if (!h) return '';
+  const lines: string[] = [];
+  lines.push(`${h.location.toUpperCase()} — ${h.condition.name}`);
+  lines.push(h.condition.detail);
+  lines.push('');
+  h.items.forEach((item) => {
+    const bits = [`Weight ${item.weightLabel}`, item.costLabel];
+    if (item.air !== undefined) bits.push(`Air ${item.air}`);
+    if (item.power !== undefined) bits.push(`Power ${item.power}`);
+    if (item.reload !== null) bits.push(`Reload $${item.reload.toLocaleString('en-US')}`);
+    lines.push(`- ${item.name} [${item.category}] (${bits.join(', ')})`);
+    lines.push(`  ${item.effect}`);
+  });
+  lines.push('');
+  lines.push(
+    `HAUL: ${h.items.length} item${h.items.length === 1 ? '' : 's'}, ${h.totalWeight} slot${h.totalWeight === 1 ? '' : 's'} of encumbrance (Strength ${h.strengthNeeded} to carry it all)`
+  );
+  lines.push(
+    `VALUE: $${h.totalValue.toLocaleString('en-US')}${h.condition.valueMultiplier !== 1 ? ` (${h.condition.name.toLowerCase()}, ×${h.condition.valueMultiplier})` : ''}`
+  );
+  if (h.detail) {
+    lines.push('');
+    lines.push(`SITE DETAIL: ${h.detail}`);
+  }
+  return lines.join('\n');
+});
+
+async function copyHaul(): Promise<void> {
+  try {
+    await navigator.clipboard.writeText(haulText.value);
+    copied.value = true;
+    setTimeout(() => {
+      copied.value = false;
+    }, 2000);
+  } catch {
+    copied.value = false;
+  }
+}
 </script>
 
 <template>
   <div class="flex flex-col gap-6">
-    <!-- ── Controls ── -->
-    <div class="flex flex-col gap-5">
-      <!-- Row 1: Location + Condition -->
-      <div class="flex flex-col gap-4 sm:flex-row sm:flex-wrap">
-        <!-- Location -->
-        <div class="flex min-w-[200px] flex-1 flex-col gap-[0.375rem]">
+    <!-- Controls -->
+    <div class="flex flex-col gap-4">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="flex flex-col gap-[0.375rem]">
           <div class="flex items-center justify-between gap-2">
             <label
               for="salvage-location"
@@ -701,7 +466,7 @@ const resultItemCount = computed(() => result.value?.items.length ?? 0);
               <input
                 v-model="randomiseLocation"
                 type="checkbox"
-                class="accent-[var(--color-brand-primary)]"
+                class="h-4 w-4 shrink-0 accent-[var(--color-brand-primary)]"
               />
               <span
                 class="text-xs text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
@@ -711,16 +476,17 @@ const resultItemCount = computed(() => result.value?.items.length ?? 0);
           </div>
           <select
             id="salvage-location"
-            v-model="locationType"
+            v-model="locationName"
             :disabled="randomiseLocation"
-            class="rounded-md border border-[var(--color-surface-500)] bg-[var(--color-surface-600)] px-[0.875rem] py-[0.625rem] font-[inherit] text-sm text-[var(--color-text-primary-dark)] transition-[border-color] duration-150 ease-out outline-none focus:border-[var(--color-brand-primary)] disabled:cursor-not-allowed disabled:opacity-50 [.light_&]:text-[var(--color-text-primary-light)]"
+            class="rounded-md border border-[var(--color-surface-500)] bg-[var(--color-surface-600)] px-[0.875rem] py-[0.625rem] font-[inherit] text-base text-[var(--color-text-primary-dark)] transition-[border-color] duration-150 ease-out outline-none focus:border-[var(--color-brand-primary)] disabled:cursor-not-allowed disabled:opacity-50 [.light_&]:text-[var(--color-text-primary-light)]"
           >
-            <option v-for="loc in LOCATION_TYPES" :key="loc" :value="loc">{{ loc }}</option>
+            <option v-for="loc in LOCATIONS" :key="loc.name" :value="loc.name">
+              {{ loc.name }}
+            </option>
           </select>
         </div>
 
-        <!-- Condition -->
-        <div class="flex min-w-[160px] flex-1 flex-col gap-[0.375rem]">
+        <div class="flex flex-col gap-[0.375rem]">
           <div class="flex items-center justify-between gap-2">
             <label
               for="salvage-condition"
@@ -731,7 +497,7 @@ const resultItemCount = computed(() => result.value?.items.length ?? 0);
               <input
                 v-model="randomiseCondition"
                 type="checkbox"
-                class="accent-[var(--color-brand-primary)]"
+                class="h-4 w-4 shrink-0 accent-[var(--color-brand-primary)]"
               />
               <span
                 class="text-xs text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
@@ -741,102 +507,320 @@ const resultItemCount = computed(() => result.value?.items.length ?? 0);
           </div>
           <select
             id="salvage-condition"
-            v-model="condition"
+            v-model="conditionName"
             :disabled="randomiseCondition"
-            class="rounded-md border border-[var(--color-surface-500)] bg-[var(--color-surface-600)] px-[0.875rem] py-[0.625rem] font-[inherit] text-sm text-[var(--color-text-primary-dark)] transition-[border-color] duration-150 ease-out outline-none focus:border-[var(--color-brand-primary)] disabled:cursor-not-allowed disabled:opacity-50 [.light_&]:text-[var(--color-text-primary-light)]"
+            class="rounded-md border border-[var(--color-surface-500)] bg-[var(--color-surface-600)] px-[0.875rem] py-[0.625rem] font-[inherit] text-base text-[var(--color-text-primary-dark)] transition-[border-color] duration-150 ease-out outline-none focus:border-[var(--color-brand-primary)] disabled:cursor-not-allowed disabled:opacity-50 [.light_&]:text-[var(--color-text-primary-light)]"
           >
-            <option v-for="cond in CONDITIONS" :key="cond" :value="cond">{{ cond }}</option>
+            <option v-for="cond in CONDITIONS" :key="cond.name" :value="cond.name">
+              {{ cond.name }}
+            </option>
           </select>
         </div>
       </div>
 
-      <!-- Row 2: Generate button -->
-      <button
-        type="button"
-        class="w-fit cursor-pointer rounded-md border border-[var(--color-brand-primary)] bg-[var(--color-brand-primary)] px-4 py-2 text-sm font-semibold text-[var(--color-surface-900)] transition-opacity hover:opacity-90"
-        @click="generate"
-      >
-        Search Location
-      </button>
+      <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+        <button
+          type="button"
+          class="cursor-pointer rounded-md border border-[var(--color-brand-primary)] bg-[var(--color-brand-primary)] px-4 py-2 text-sm font-semibold text-[var(--color-surface-900)] transition-opacity hover:opacity-90"
+          @click="generate"
+        >
+          Search location
+        </button>
+        <label
+          class="flex cursor-pointer items-center gap-2 text-sm text-[var(--color-text-primary-dark)] [.light_&]:text-[var(--color-text-primary-light)]"
+        >
+          <input
+            v-model="includeDetail"
+            type="checkbox"
+            class="h-4 w-4 shrink-0 accent-[var(--color-brand-primary)]"
+          />
+          Site detail
+        </label>
+        <button
+          v-if="haul"
+          type="button"
+          class="cursor-pointer rounded-md border border-[var(--color-surface-500)] bg-[var(--color-surface-600)] px-4 py-2 text-sm font-medium text-[var(--color-text-secondary-dark)] transition-[border-color] duration-150 hover:border-[var(--color-brand-primary)] [.light_&]:text-[var(--color-text-secondary-light)]"
+          @click="copyHaul"
+        >
+          {{ copied ? 'Copied' : 'Copy haul' }}
+        </button>
+        <button
+          v-if="haul"
+          type="button"
+          class="cursor-pointer rounded-md border border-[var(--color-surface-500)] bg-[var(--color-surface-600)] px-4 py-2 text-sm font-medium text-[var(--color-text-secondary-dark)] transition-[border-color] duration-150 hover:border-[var(--color-brand-primary)] [.light_&]:text-[var(--color-text-secondary-light)]"
+          @click="clearOutput"
+        >
+          Clear
+        </button>
+      </div>
     </div>
 
-    <!-- ── Result ── -->
-    <div v-if="result" class="flex flex-col gap-4" aria-live="polite">
-      <!-- Location + condition header -->
+    <!-- Result -->
+    <div v-if="haul" class="flex flex-col gap-4" aria-live="polite">
+      <!-- Haul summary -->
       <div
-        class="flex flex-col gap-[0.25rem] rounded-lg border border-[var(--color-surface-600)] bg-[var(--color-surface-700)] px-4 py-3"
+        class="flex flex-col gap-3 rounded-lg border border-[var(--color-brand-primary)] bg-[var(--color-surface-700)] p-4"
       >
         <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span
-            class="text-base font-bold text-[var(--color-text-primary-dark)] [.light_&]:text-[var(--color-text-primary-light)]"
-            >{{ result.location }}</span
+            class="text-lg font-semibold text-[var(--color-text-primary-dark)] [.light_&]:text-[var(--color-text-primary-light)]"
+            >{{ haul.location }}</span
           >
           <span
             class="rounded-full border border-[var(--color-surface-500)] bg-[var(--color-surface-600)] px-3 py-[0.2rem] text-xs font-semibold"
             :class="{
-              'text-green-400': result.condition === 'Intact' || result.condition === 'Sealed',
-              'text-yellow-400': result.condition === 'Worn',
-              'text-orange-400': result.condition === 'Damaged',
-              'text-red-400': result.condition === 'Looted',
+              'text-green-400': haul.condition.name === 'Intact' || haul.condition.name === 'Sealed',
+              'text-yellow-400': haul.condition.name === 'Worn',
+              'text-orange-400': haul.condition.name === 'Damaged',
+              'text-red-400': haul.condition.name === 'Looted',
             }"
-            >{{ result.condition }}</span
-          >
-          <span
-            class="text-xs text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
-            >{{ resultItemCount }} item{{ resultItemCount !== 1 ? 's' : '' }} found</span
+            >{{ haul.condition.name }}</span
           >
         </div>
         <p
-          class="m-0 text-xs leading-[1.5] text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
+          class="m-0 text-xs leading-[1.55] text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
         >
-          {{ result.conditionDetail }}
+          {{ haul.condition.detail }}
+        </p>
+        <dl class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div class="flex flex-col gap-1">
+            <dt
+              class="text-xs font-semibold tracking-[0.06em] text-[var(--color-text-secondary-dark)] uppercase [.light_&]:text-[var(--color-text-secondary-light)]"
+            >
+              Items found
+            </dt>
+            <dd
+              class="m-0 text-sm text-[var(--color-text-primary-dark)] [.light_&]:text-[var(--color-text-primary-light)]"
+            >
+              {{ haul.items.length }}
+            </dd>
+          </div>
+          <div class="flex flex-col gap-1">
+            <dt
+              class="text-xs font-semibold tracking-[0.06em] text-[var(--color-text-secondary-dark)] uppercase [.light_&]:text-[var(--color-text-secondary-light)]"
+            >
+              Encumbrance
+            </dt>
+            <dd
+              class="m-0 text-sm text-[var(--color-text-primary-dark)] [.light_&]:text-[var(--color-text-primary-light)]"
+            >
+              {{ haul.totalWeight }} slot{{ haul.totalWeight === 1 ? '' : 's' }}
+              <span
+                class="block text-xs text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
+              >
+                Strength {{ haul.strengthNeeded }} to carry it all<template
+                  v-if="haul.uncarriable"
+                >
+                  · {{ haul.uncarriable }} item{{ haul.uncarriable === 1 ? '' : 's' }} too heavy to
+                  carry</template
+                >
+              </span>
+            </dd>
+          </div>
+          <div class="flex flex-col gap-1">
+            <dt
+              class="text-xs font-semibold tracking-[0.06em] text-[var(--color-text-secondary-dark)] uppercase [.light_&]:text-[var(--color-text-secondary-light)]"
+            >
+              Salvage value
+            </dt>
+            <dd
+              class="m-0 text-sm text-[var(--color-text-primary-dark)] [.light_&]:text-[var(--color-text-primary-light)]"
+            >
+              ${{ haul.totalValue.toLocaleString('en-US') }}
+              <span
+                class="block text-xs text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
+              >
+                <template v-if="haul.condition.valueMultiplier !== 1"
+                  >list price × {{ haul.condition.valueMultiplier }}</template
+                >
+                <template v-else>at list price</template>
+                <template v-if="haul.variableCount">
+                  · {{ haul.variableCount }} priced by the GM</template
+                >
+              </span>
+            </dd>
+          </div>
+        </dl>
+        <p
+          v-if="haul.detail"
+          class="m-0 border-t border-[var(--color-surface-600)] pt-3 text-sm leading-[1.55] text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
+        >
+          {{ haul.detail }}
         </p>
       </div>
 
-      <!-- Items list -->
+      <!-- Items -->
       <div class="flex flex-col gap-[0.35rem]">
         <div
-          v-for="item in result.items"
+          v-for="item in haul.items"
           :key="item.name"
           class="rounded-lg border border-[var(--color-surface-600)] bg-[var(--color-surface-700)] px-4 py-3"
         >
-          <div class="flex flex-wrap items-start gap-x-2 gap-y-1">
-            <!-- Rarity dot -->
-            <span
-              class="mt-[0.35rem] h-[0.45rem] w-[0.45rem] shrink-0 rounded-full"
-              :class="RARITY_DOT[item.rarity]"
-              :title="RARITY_LABEL[item.rarity]"
-            ></span>
-
-            <!-- Item name -->
+          <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <span
               class="text-sm font-semibold text-[var(--color-text-primary-dark)] [.light_&]:text-[var(--color-text-primary-light)]"
               >{{ item.name }}</span
             >
-
-            <!-- Rarity label -->
-            <span class="text-xs font-medium" :class="RARITY_COLOR[item.rarity]">{{
-              RARITY_LABEL[item.rarity]
-            }}</span>
+            <span
+              class="rounded-full border border-[var(--color-surface-500)] px-2 py-[0.1rem] text-xs text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
+              >{{ item.category }}</span
+            >
           </div>
           <p
-            class="m-0 mt-[0.2rem] pl-[1.1rem] text-xs leading-[1.5] text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
+            class="m-0 mt-[0.3rem] text-xs leading-[1.55] text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
           >
-            {{ item.detail }}
+            {{ item.effect }}
           </p>
+          <div class="mt-[0.4rem] flex flex-wrap gap-x-4 gap-y-1 text-xs">
+            <span
+              class="text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
+              >Weight
+              <strong
+                class="font-semibold text-[var(--color-text-primary-dark)] [.light_&]:text-[var(--color-text-primary-light)]"
+                >{{ item.weightLabel }}</strong
+              ></span
+            >
+            <span
+              class="text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
+              >Cost
+              <strong
+                class="font-semibold text-[var(--color-text-primary-dark)] [.light_&]:text-[var(--color-text-primary-light)]"
+                >{{ item.costLabel }}</strong
+              ></span
+            >
+            <span v-if="item.air !== undefined" class="text-[var(--color-brand-primary)]"
+              >Air supply <strong class="font-semibold">{{ item.air }}</strong></span
+            >
+            <span v-if="item.power !== undefined" class="text-[var(--color-brand-primary)]"
+              >Power supply <strong class="font-semibold">{{ item.power }}</strong></span
+            >
+            <span
+              v-if="item.reload !== null"
+              class="text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
+              >Reload
+              <strong
+                class="font-semibold text-[var(--color-text-primary-dark)] [.light_&]:text-[var(--color-text-primary-light)]"
+                >${{ item.reload.toLocaleString('en-US') }}</strong
+              ></span
+            >
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ── Empty state ── -->
+    <!-- Empty state -->
     <div
       v-else
       class="rounded-lg border border-dashed border-[var(--color-surface-500)] bg-[var(--color-surface-700)] p-6 text-center text-sm text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
     >
       <p class="m-0">
-        Choose a location and condition, then hit <strong>Search Location</strong> to see what the
-        crew finds.
+        Pick a location and a condition, then search it. Everything the crew turns up comes from the
+        rulebook gear tables, with its printed weight, cost, effect and supply ratings, totalled into
+        a haul value and an encumbrance figure.
       </p>
+    </div>
+
+    <!-- Supply roll panel -->
+    <div
+      class="flex flex-col gap-4 rounded-lg border border-[var(--color-surface-600)] bg-[var(--color-surface-700)] p-4"
+    >
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <span
+          class="text-xs font-semibold tracking-[0.06em] text-[var(--color-text-secondary-dark)] uppercase [.light_&]:text-[var(--color-text-secondary-light)]"
+          >Supply roll</span
+        >
+        <span
+          class="text-xs text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
+          >Roll stress dice equal to the rating, max six. Every 1 costs a point.</span
+        >
+      </div>
+
+      <div class="flex flex-wrap items-end gap-3">
+        <div class="flex flex-col gap-[0.375rem]">
+          <label
+            for="supply-rating"
+            class="text-sm font-semibold text-[var(--color-text-primary-dark)] [.light_&]:text-[var(--color-text-primary-light)]"
+            >Current rating</label
+          >
+          <input
+            id="supply-rating"
+            v-model.number="supplyRating"
+            type="number"
+            min="0"
+            max="6"
+            step="1"
+            class="w-24 rounded-md border border-[var(--color-surface-500)] bg-[var(--color-surface-600)] px-[0.875rem] py-[0.625rem] font-[inherit] text-base text-[var(--color-text-primary-dark)] transition-[border-color] duration-150 ease-out outline-none focus:border-[var(--color-brand-primary)] [.light_&]:text-[var(--color-text-primary-light)]"
+          />
+        </div>
+        <button
+          type="button"
+          :disabled="supplyRating < 1"
+          class="cursor-pointer rounded-md border border-[var(--color-brand-primary)] bg-[var(--color-brand-primary)] px-4 py-2 text-sm font-semibold text-[var(--color-surface-900)] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+          @click="rollSupply"
+        >
+          Roll supply
+        </button>
+        <button
+          type="button"
+          class="cursor-pointer rounded-md border border-[var(--color-surface-500)] bg-[var(--color-surface-600)] px-4 py-2 text-sm font-medium text-[var(--color-text-secondary-dark)] transition-[border-color] duration-150 hover:border-[var(--color-brand-primary)] [.light_&]:text-[var(--color-text-secondary-light)]"
+          @click="resetSupply"
+        >
+          Reset
+        </button>
+        <span
+          v-if="supplyRating >= 1"
+          class="text-xs text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
+          >About {{ ROLLS_TO_ZERO[supplyRating] }} rolls to run dry from here</span
+        >
+        <span v-else class="text-xs font-semibold text-red-400"
+          >Empty. You are entering a world of hurt.</span
+        >
+      </div>
+
+      <div v-if="lastSupplyRoll" class="flex flex-wrap items-center gap-2" aria-live="polite">
+        <span
+          v-for="(die, i) in lastSupplyRoll.dice"
+          :key="i"
+          class="flex h-8 w-8 items-center justify-center rounded-md border text-sm font-bold"
+          :class="
+            die === 1
+              ? 'border-red-500 bg-red-950/40 text-red-400'
+              : 'border-[var(--color-surface-500)] bg-[var(--color-surface-600)] text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]'
+          "
+          >{{ die }}</span
+        >
+        <span
+          class="text-sm text-[var(--color-text-primary-dark)] [.light_&]:text-[var(--color-text-primary-light)]"
+        >
+          {{ lastSupplyRoll.lost }} lost · {{ lastSupplyRoll.before }} →
+          {{ lastSupplyRoll.after }}
+        </span>
+      </div>
+
+      <div class="border-t border-[var(--color-surface-600)] pt-3">
+        <span
+          class="text-xs font-semibold tracking-[0.06em] text-[var(--color-text-secondary-dark)] uppercase [.light_&]:text-[var(--color-text-secondary-light)]"
+          >Consumables tracked this edition</span
+        >
+        <dl class="mt-2 flex flex-col gap-2">
+          <div
+            v-for="consumable in CONSUMABLES[edition]"
+            :key="consumable.name"
+            class="flex flex-col gap-1 sm:flex-row sm:gap-2"
+          >
+            <dt
+              class="shrink-0 text-xs font-semibold tracking-[0.06em] text-[var(--color-brand-primary)] uppercase sm:w-20"
+            >
+              {{ consumable.name }}
+            </dt>
+            <dd
+              class="m-0 text-xs leading-[1.55] text-[var(--color-text-secondary-dark)] [.light_&]:text-[var(--color-text-secondary-light)]"
+            >
+              {{ consumable.interval }}
+            </dd>
+          </div>
+        </dl>
+      </div>
     </div>
   </div>
 </template>

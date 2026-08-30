@@ -4,7 +4,16 @@ import tseslint from "typescript-eslint";
 
 export default [
   {
-    ignores: ["dist", "dist-web", "node_modules", "build", ".git"],
+    ignores: [
+      "dist",
+      "dist-web",
+      "dist-ssr",
+      "node_modules",
+      "build",
+      "android",
+      "Release",
+      ".git",
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
@@ -56,6 +65,16 @@ export default [
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
       "no-unused-vars": "off",
+      // Template layout is Prettier's job now. Turn off the vue/recommended
+      // stylistic rules that fight it, or every formatted file reports noise.
+      "vue/max-attributes-per-line": "off",
+      "vue/singleline-html-element-content-newline": "off",
+      "vue/multiline-html-element-content-newline": "off",
+      "vue/html-self-closing": "off",
+      "vue/html-closing-bracket-spacing": "off",
+      "vue/html-closing-bracket-newline": "off",
+      "vue/html-indent": "off",
+      "vue/first-attribute-linebreak": "off",
     },
   },
   {

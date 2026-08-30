@@ -7,10 +7,8 @@
  */
 
 export function isElectron() {
-  const hasElectronAPI =
-    typeof window !== "undefined" && window.electron?.isElectron === true;
-  const hasElectronProcess =
-    typeof process !== "undefined" && process.versions?.electron;
+  const hasElectronAPI = typeof window !== "undefined" && window.electron?.isElectron === true;
+  const hasElectronProcess = typeof process !== "undefined" && process.versions?.electron;
   return Boolean(hasElectronAPI || hasElectronProcess);
 }
 

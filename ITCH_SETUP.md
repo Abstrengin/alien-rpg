@@ -50,20 +50,20 @@ git push origin v1.3.0
 
 The workflow then:
 
-| Job | Produces |
-|---|---|
-| `build-windows` | `dist/*Portable*.exe` |
-| `build-linux` | `dist/*.AppImage`, `dist-web/` |
-| `publish-itch` | `butler push` to `abstract-engineer/alien-rpg-tools` channels `windows`, `linux`, `html5`, each tagged `--userversion <version>` |
-| `release` | GitHub Release with the `.exe` and `.AppImage` |
+| Job             | Produces                                                                                                                         |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `build-windows` | `dist/*Portable*.exe`                                                                                                            |
+| `build-linux`   | `dist/*.AppImage`, `dist-web/`                                                                                                   |
+| `publish-itch`  | `butler push` to `abstract-engineer/alien-rpg-tools` channels `windows`, `linux`, `html5`, each tagged `--userversion <version>` |
+| `release`       | GitHub Release with the `.exe` and `.AppImage`                                                                                   |
 
 ## Channels
 
-| Channel | Source artifact | butler target |
-|---|---|---|
-| `windows` | `dist/Alien RPG Tools Portable <version>.exe` | `abstract-engineer/alien-rpg-tools:windows` |
-| `linux` | `dist/*.AppImage` | `abstract-engineer/alien-rpg-tools:linux` |
-| `html5` | `dist-web/` (directory, contains `index.html`) | `abstract-engineer/alien-rpg-tools:html5` |
+| Channel   | Source artifact                                | butler target                               |
+| --------- | ---------------------------------------------- | ------------------------------------------- |
+| `windows` | `dist/Alien RPG Tools Portable <version>.exe`  | `abstract-engineer/alien-rpg-tools:windows` |
+| `linux`   | `dist/*.AppImage`                              | `abstract-engineer/alien-rpg-tools:linux`   |
+| `html5`   | `dist-web/` (directory, contains `index.html`) | `abstract-engineer/alien-rpg-tools:html5`   |
 
 ## Testing butler locally (optional)
 

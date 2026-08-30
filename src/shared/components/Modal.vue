@@ -13,9 +13,7 @@
             {{ title }}
           </h2>
         </div>
-        <div
-          class="px-6 py-4 text-gray-700 dark:text-gray-300 max-h-96 overflow-y-auto"
-        >
+        <div class="px-6 py-4 text-gray-700 dark:text-gray-300 max-h-96 overflow-y-auto">
           <slot />
         </div>
         <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">

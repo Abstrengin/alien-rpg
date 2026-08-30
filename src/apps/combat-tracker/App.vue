@@ -12,12 +12,10 @@
             >
               APP INFO
             </button>
-            <Modal
-              v-model:model-value="showAppInfo"
-              title="ABOUT THIS TOOL"
-            >
+            <Modal v-model:model-value="showAppInfo" title="ABOUT THIS TOOL">
               <p class="mb-3">
-                <strong>Combat Tracker</strong> tracks initiative order, health, and status effects for every combatant in an Alien RPG fight.
+                <strong>Combat Tracker</strong> tracks initiative order, health, and status effects
+                for every combatant in an Alien RPG fight.
               </p>
               <p class="mb-3">
                 Part of the Alien RPG Tools suite by
@@ -27,16 +25,14 @@
                   rel="noopener noreferrer"
                   class="text-blue-600 dark:text-blue-400 hover:underline"
                 >
-                  Ties That Bind Gaming
-                </a>.
+                  Ties That Bind Gaming </a
+                >.
               </p>
               <p class="mb-3">
                 Compatible with both the original <strong>Alien RPG</strong> and the
                 <strong>Evolved Edition</strong>.
               </p>
-              <p class="mb-0">
-                <strong>Version:</strong> {{ APP_VERSION }}
-              </p>
+              <p class="mb-0"><strong>Version:</strong> {{ APP_VERSION }}</p>
               <template #footer>
                 <button
                   class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full"
@@ -57,9 +53,7 @@
         </div>
       </aside>
 
-      <main
-        class="flex-1 w-full text-gray-900 dark:text-gray-100 transition-colors duration-200"
-      >
+      <main class="flex-1 w-full text-gray-900 dark:text-gray-100 transition-colors duration-200">
         <Tool :key="resetKey" />
       </main>
     </div>

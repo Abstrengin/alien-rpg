@@ -23,6 +23,9 @@ butler.zip
 *.msi
 Release/
 
+# Private / local-only files
+_private/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -10,7 +10,9 @@
           <div
             class="py-3 pr-2 sm:pr-3 sm:py-3 sm:border-r border-gray-200 dark:border-gray-700 flex-shrink-0"
           >
-            <h1 class="text-sm sm:text-base font-bold text-gray-900 dark:text-white whitespace-nowrap">
+            <h1
+              class="text-sm sm:text-base font-bold text-gray-900 dark:text-white whitespace-nowrap"
+            >
               Alien RPG Tools
             </h1>
           </div>
@@ -67,12 +69,7 @@
               :aria-label="isMobileMenuOpen ? 'Close menu' : 'Open menu'"
               @click="isMobileMenuOpen = !isMobileMenuOpen"
             >
-              <svg
-                class="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -119,29 +116,17 @@
 
     <!-- App Content -->
     <div class="flex-1">
-      <div
-        v-if="activeApp === 'home'"
-        class="w-full"
-      >
+      <div v-if="activeApp === 'home'" class="w-full">
         <Home @navigate="handleNavigate" />
       </div>
 
-      <template
-        v-for="app in toolApps"
-        :key="app.id"
-      >
-        <div
-          v-if="activeApp === app.id"
-          class="w-full"
-        >
+      <template v-for="app in toolApps" :key="app.id">
+        <div v-if="activeApp === app.id" class="w-full">
           <component :is="app.component" />
         </div>
       </template>
 
-      <div
-        v-if="activeApp === 'about'"
-        class="w-full"
-      >
+      <div v-if="activeApp === 'about'" class="w-full">
         <About />
       </div>
     </div>
@@ -173,15 +158,40 @@ const isDarkMode = ref(true);
 const isMobileMenuOpen = ref(false);
 
 const toolApps = [
-  { id: "star-system-generator", name: "Star System Generator", short: "Star Systems", component: StarSystemGenerator },
-  { id: "space-travel-tool", name: "Space Travel Tool", short: "Travel", component: SpaceTravelTool },
+  {
+    id: "star-system-generator",
+    name: "Star System Generator",
+    short: "Star Systems",
+    component: StarSystemGenerator,
+  },
+  {
+    id: "space-travel-tool",
+    name: "Space Travel Tool",
+    short: "Travel",
+    component: SpaceTravelTool,
+  },
   { id: "combat-tracker", name: "Combat Tracker", short: "Combat", component: CombatTracker },
-  { id: "contract-cargo-generator", name: "Contract & Cargo Generator", short: "Contracts", component: ContractCargoGenerator },
+  {
+    id: "contract-cargo-generator",
+    name: "Contract & Cargo Generator",
+    short: "Contracts",
+    component: ContractCargoGenerator,
+  },
   { id: "panic-tool", name: "Stress & Panic Tool", short: "Panic", component: PanicTool },
   { id: "npc-generator", name: "NPC Generator", short: "NPCs", component: NpcGenerator },
-  { id: "creature-generator", name: "Creature Generator", short: "Creatures", component: CreatureGenerator },
+  {
+    id: "creature-generator",
+    name: "Creature Generator",
+    short: "Creatures",
+    component: CreatureGenerator,
+  },
   { id: "ship-generator", name: "Ship Generator", short: "Ships", component: ShipGenerator },
-  { id: "supply-salvage-generator", name: "Supply & Salvage Generator", short: "Salvage", component: SupplySalvageGenerator },
+  {
+    id: "supply-salvage-generator",
+    name: "Supply & Salvage Generator",
+    short: "Salvage",
+    component: SupplySalvageGenerator,
+  },
 ];
 
 const apps = computed(() => [

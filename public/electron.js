@@ -116,8 +116,7 @@ function createSplashScreen() {
     </html>
   `;
 
-  const dataUrl =
-    "data:text/html;charset=utf-8," + encodeURIComponent(splashHTML);
+  const dataUrl = "data:text/html;charset=utf-8," + encodeURIComponent(splashHTML);
   splashScreen.loadURL(dataUrl);
 
   return splashScreen;

@@ -38,12 +38,12 @@ That's it. The tag push triggers the `Release` workflow. Watch it at
 
 ## What the workflow does
 
-| Job | Produces |
-|---|---|
-| `build-windows` | `dist/Alien RPG Tools Portable <version>.exe` |
-| `build-linux` | `dist/*.AppImage` and the browser bundle `dist-web/` |
-| `publish-itch` | `butler push` of all three to `abstract-engineer/alien-rpg-tools` on channels `windows`, `linux`, `html5` |
-| `release` | A GitHub Release containing the `.exe` and `.AppImage` |
+| Job             | Produces                                                                                                  |
+| --------------- | --------------------------------------------------------------------------------------------------------- |
+| `build-windows` | `dist/Alien RPG Tools Portable <version>.exe`                                                             |
+| `build-linux`   | `dist/*.AppImage` and the browser bundle `dist-web/`                                                      |
+| `publish-itch`  | `butler push` of all three to `abstract-engineer/alien-rpg-tools` on channels `windows`, `linux`, `html5` |
+| `release`       | A GitHub Release containing the `.exe` and `.AppImage`                                                    |
 
 The Linux AppImage is the reason this runs in CI rather than locally: it
 cannot be built on Windows.

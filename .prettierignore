@@ -1,0 +1,15 @@
+dist
+dist-web
+dist-ssr
+node_modules
+build
+android
+Release
+butler
+butler.zip
+_private
+**/package-lock.json
+
+# Ported tool components are kept byte-identical to their source in the
+# tiesthatbindgaming.com repo. Do not let `prettier --write` reformat them.
+src/apps/*/tool.vue

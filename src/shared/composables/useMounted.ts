@@ -1,4 +1,4 @@
-import { readonly, ref, onMounted, type Ref } from 'vue';
+import { readonly, ref, onMounted, type Ref } from "vue";
 
 /**
  * Tracks whether the component has mounted on the client.

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { useEdition } from '@/shared/edition';
 
 // ─── Dice ────────────────────────────────────────────────────────────────────
 
@@ -548,7 +549,8 @@ interface StarSystemResult {
 
 // ─── State ────────────────────────────────────────────────────────────────────
 
-const edition = ref<'core' | 'evolved'>('core');
+// Edition is chosen once in the sidebar and shared by every tool in the suite.
+const edition = useEdition();
 const planetContext = ref<'terrestrial' | 'ice' | 'moon'>('terrestrial');
 const planet = ref<PlanetResult | null>(null);
 const colony = ref<ColonyResult | null>(null);
@@ -556,14 +558,14 @@ const orbital = ref<OrbitalResult | null>(null);
 const starSystem = ref<StarSystemResult | null>(null);
 const selectedStarTypeId = ref<number>(3);
 
-function switchEdition(ed: 'core' | 'evolved') {
-  edition.value = ed;
+// The editions use different tables, so stale results would be misleading.
+watch(edition, () => {
   planet.value = null;
   colony.value = null;
   orbital.value = null;
   starSystem.value = null;
   planetContext.value = 'terrestrial';
-}
+});
 
 // ─── Core generation ──────────────────────────────────────────────────────────
 
@@ -971,38 +973,6 @@ function resetPlanet() {
 
 <template>
   <div class="flex flex-col gap-5">
-    <!-- Edition toggle -->
-    <div class="flex flex-col gap-2">
-      <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
-        <button
-          type="button"
-          class="inline-flex h-10 w-full cursor-pointer items-center justify-center rounded-md px-4 text-sm font-semibold transition-[background,color,border-color] duration-150"
-          :class="
-            edition === 'core'
-              ? 'bg-[var(--color-brand-primary)] text-[#0d1117]'
-              : 'border border-[var(--color-surface-500)] text-[var(--color-text-secondary-dark)] hover:border-[var(--color-brand-primary)] hover:text-[var(--color-text-primary-dark)] [.light_&]:text-[var(--color-text-secondary-light)] [.light_&]:hover:text-[var(--color-text-primary-light)]'
-          "
-          @click="switchEdition('core')"
-        >
-          Alien RPG
-        </button>
-        <button
-          type="button"
-          class="inline-flex h-10 w-full cursor-pointer items-center justify-center rounded-md px-4 text-sm font-semibold transition-[background,color,border-color] duration-150"
-          :class="
-            edition === 'evolved'
-              ? 'bg-[var(--color-brand-primary)] text-[#0d1117]'
-              : 'border border-[var(--color-surface-500)] text-[var(--color-text-secondary-dark)] hover:border-[var(--color-brand-primary)] hover:text-[var(--color-text-primary-dark)] [.light_&]:text-[var(--color-text-secondary-light)] [.light_&]:hover:text-[var(--color-text-primary-light)]'
-          "
-          @click="switchEdition('evolved')"
-        >
-          Alien RPG – Evolved Edition
-        </button>
-      </div>
-    </div>
-
-    <hr class="border-[var(--color-surface-600)] [.light_&]:border-[var(--color-light-200)]" />
-
     <!-- Star System controls -->
     <div class="flex flex-col gap-2 sm:flex-row sm:items-stretch sm:gap-2">
       <button

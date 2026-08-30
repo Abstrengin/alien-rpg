@@ -121,7 +121,12 @@ async function main() {
           `<circle cx="${legacyPx / 2}" cy="${legacyPx / 2}" r="${legacyPx / 2}" fill="${BG}"/></svg>`,
       );
       const base = await sharp({
-        create: { width: legacyPx, height: legacyPx, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+        create: {
+          width: legacyPx,
+          height: legacyPx,
+          channels: 4,
+          background: { r: 0, g: 0, b: 0, alpha: 0 },
+        },
       })
         .composite([
           { input: disc },
@@ -149,7 +154,10 @@ async function main() {
   );
 
   // The stock vector layers are now unused (adaptive bg is a colour, fg is a mipmap).
-  for (const f of ["drawable/ic_launcher_background.xml", "drawable-v24/ic_launcher_foreground.xml"]) {
+  for (const f of [
+    "drawable/ic_launcher_background.xml",
+    "drawable-v24/ic_launcher_foreground.xml",
+  ]) {
     const p = path.join(RES, f);
     if (fs.existsSync(p)) {
       fs.rmSync(p);

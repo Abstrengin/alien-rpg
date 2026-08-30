@@ -11,17 +11,17 @@ Capacitor ([docs/ANDROID.md](docs/ANDROID.md)).
 
 ## Tools
 
-| Tool | What it does |
-|---|---|
-| Star System Generator | Complete star systems, planets, and colonies |
-| Space Travel Tool | FTL travel time, crew pay periods, and hypersleep event rolls |
-| Combat Tracker | Initiative order, health, and status for every combatant |
+| Tool                       | What it does                                                    |
+| -------------------------- | --------------------------------------------------------------- |
+| Star System Generator      | Complete star systems, planets, and colonies                    |
+| Space Travel Tool          | FTL travel time, crew pay periods, and hypersleep event rolls   |
+| Combat Tracker             | Initiative order, health, and status for every combatant        |
 | Contract & Cargo Generator | Freighter contracts: cargo, destination, pay, and complications |
-| Stress & Panic Tool | Stress rolls and Panic table resolution |
-| NPC Generator | Careers, motivations, appearance, personality, hidden agendas |
-| Creature Generator | Original alien threats with attributes, attacks, and abilities |
-| Ship Generator | Ship class, condition, crew, cargo, and history |
-| Supply & Salvage Generator | Supplies and salvage from derelicts, stations, and wrecks |
+| Stress & Panic Tool        | Stress rolls and Panic table resolution                         |
+| NPC Generator              | Careers, motivations, appearance, personality, hidden agendas   |
+| Creature Generator         | Original alien threats with attributes, attacks, and abilities  |
+| Ship Generator             | Ship class, condition, crew, cargo, and history                 |
+| Supply & Salvage Generator | Supplies and salvage from derelicts, stations, and wrecks       |
 
 The tool components under `src/apps/*/tool.vue` are copied verbatim from the
 `ties-that-bind-gaming` repo (`src/components/islands/AlienRPG*.vue`). Keep them
@@ -53,12 +53,12 @@ npm run lint           # ESLint (with --fix)
 
 ### Build outputs
 
-| Command | Config | Output | Used for |
-|---|---|---|---|
-| `npm run build` | `vite.config.js` | `dist/alien-rpg-tools.js` + `.css` | Electron shell, WordPress `<ttbg-app>` embed (library / custom-element mode) |
-| `npm run build:web` | `vite.config.web.js` | `dist-web/` | Standalone SPA for itch.io HTML5, or any static host (`base: "./"`) |
-| `npm run electron-build` | – | `dist/*Portable*.exe`, `dist/*.AppImage` | Desktop distribution |
-| `npm run android:bundle` | Capacitor | `android/app/build/outputs/*.aab` / `*.apk` | Android distribution ([docs/ANDROID.md](docs/ANDROID.md)) |
+| Command                  | Config               | Output                                      | Used for                                                                     |
+| ------------------------ | -------------------- | ------------------------------------------- | ---------------------------------------------------------------------------- |
+| `npm run build`          | `vite.config.js`     | `dist/alien-rpg-tools.js` + `.css`          | Electron shell, WordPress `<ttbg-app>` embed (library / custom-element mode) |
+| `npm run build:web`      | `vite.config.web.js` | `dist-web/`                                 | Standalone SPA for itch.io HTML5, or any static host (`base: "./"`)          |
+| `npm run electron-build` | –                    | `dist/*Portable*.exe`, `dist/*.AppImage`    | Desktop distribution                                                         |
+| `npm run android:bundle` | Capacitor            | `android/app/build/outputs/*.aab` / `*.apk` | Android distribution ([docs/ANDROID.md](docs/ANDROID.md))                    |
 
 ## Releasing
 
